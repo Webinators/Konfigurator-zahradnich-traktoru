@@ -1,0 +1,1 @@
+# Konfigurator-zahradnich-traktoru
