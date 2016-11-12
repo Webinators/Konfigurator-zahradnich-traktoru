@@ -1,0 +1,183 @@
+ 
+ .FileUploaderExtendetContainer{
+ margin-top: 8px;
+ margin-left: 1%;
+ display: inline-block;
+ width: 98%;
+ font-size: 12px;
+ font-family: Arial;
+border-bottom: 1px #000 solid;
+ padding-top: 5px;
+ }
+
+.FileUploaderExtendetOptions
+{
+position: relative;
+width: 100%;
+height: 34px;
+background-color: grey;
+-webkit-border-top-left-radius: 4px;
+-webkit-border-top-right-radius: 4px;
+-moz-border-radius-topleft: 4px;
+-moz-border-radius-topright: 4px;
+border-top-left-radius: 4px;
+border-top-right-radius: 4px;
+border-bottom: 1px #000 solid;
+border-top: 1px #000 solid;
+border-left: 1px #000 solid;
+border-right: 1px #000 solid; 
+z-index: 20;
+}
+
+.FileUploaderExtendetOptions div{
+float: left;
+}
+
+#FileUploaderExtendetIcons, .FileUploaderExtendetEditClose
+{
+cursor: pointer;
+}
+
+.FileUploaderExtendetOptions img
+{
+margin-top: 3px;
+margin-left: 10px;
+height: 30px;
+}
+
+#FileUploaderExtendetIconsSelected
+{
+cursor: pointer;
+}
+
+#FileUploaderExtendetIconsSelected img
+{
+background-color: #dfd05f;
+}
+
+.FileUploaderExtendetContent{
+     z-index: 0;
+     position: relative;
+     margin: 0px auto;
+     top:0px;
+     left:0px;
+     width: 100%;
+     min-height: 100px;
+border-left: 1px #000 solid;
+border-right: 1px #000 solid; 
+}
+
+.FileUploaderExtendetPreviews{
+     position: relative;
+     margin: 0px auto;
+     top:0px;
+     left:0px;
+width: 100%;
+clear: both;
+}
+ 
+ .FileUploaderExtendetPreview
+ {
+     position: relative;
+     float: left;
+     padding: 0px;
+     margin-left: 8px;
+     margin-top: 8px;
+     height: 80px;
+     display: inline-block;
+     -moz-user-select: none;
+     -ms-user-select: none;
+     text-align: center;
+     width: 100px;
+     overflow: hidden;
+ }
+
+#FileUploaderExtendetFilesTable{
+border-collapse: collapse;
+margin: 0px auto;
+width: 99%;
+color: #000000;
+font-size: 12px;
+}
+
+#FileUploaderExtendetFilesTable tr{
+
+cursor: pointer;
+}
+
+#FileUploaderExtendetFilesTable tr td{
+position: relative;
+margin-top: 4px;
+text-align: right;
+height: 20px;
+}
+
+.FileUploaderExtendetFilesTableRemovefile{
+cursor: pointer;
+}
+
+.FileUploaderExtendetFileName
+{
+position: absolute;
+max-height: 13px;
+bottom: 0px;
+left: 0px;
+width: 100%;
+color: #ffffff;
+font-size: 11px;
+background-color: #000000;
+overflow: hidden;
+}
+
+ .FileUploaderExtendetPreviewRemoveIcon
+ {
+     position: relative;
+     width: 50%;
+     height: 50%;
+     top: 50%;
+     -webkit-transform: translateY(-50%);
+     -ms-transform: translateY(-50%);
+     transform: translateY(-50%);
+     cursor: pointer;
+ }
+
+ .FileUploaderExtendetPreviewOptions
+ {
+     position: absolute;
+     top: 0px;
+     left: 0px;
+     padding: 0px;
+     width: 100%;
+     height: 100%;
+     background-color :rgba(255,255,255,0.6);
+     cursor: pointer;
+     display: none;
+ }
+
+.FileUploaderExtendet{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+    -moz-opacity:0;
+    -khtml-opacity: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    z-index: 2;
+
+}
+
+.FileUploaderExtendetExtendetBody{
+    position: relative;
+    margin: 0px auto;
+    width:100%;
+    min-height:100px;
+    font:bold 24px arial;
+    color:lightgray;
+    border-radius: 4px;
+    background-color: #ffffff;
+    padding-bottom: 20px;
+}

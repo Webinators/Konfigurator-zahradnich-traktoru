@@ -1,0 +1,65 @@
+#vzkazyContainer {
+    width: 100%;
+    margin: 0pc auto;
+}
+
+.vzkazContainer {
+    position: relative;
+    margin-top: 5px;
+    text-align: center;
+    color: #000;
+    width: 100%;
+    border: 1px #000 solid;
+}
+
+.vzkazContainer .title{
+
+    min-height: 35px;
+    width: 100%;
+    background-color: #cf4531;
+    color: #ffffff;
+    padding: 5px;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+}
+
+.vzkazContainer .title p{
+    padding: 0px;
+    margin: 0px;
+}
+
+.vzkazContainer .title .edit{
+    position: absolute;
+    top: 0px;
+    right: 33px;
+    background-color: #2e2e2e;
+    padding: 3px;
+}
+
+.vzkazContainer .title .del{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    background-color: #2e2e2e;
+    padding: 3px;
+}
+
+.vzkazContainer .title h2{
+
+    font-weight: bold;
+    font-size: 1.5em;
+    padding: 0px;
+    margin: 0px;
+
+}
+
+
+.vzkazContainer .content{
+
+    padding: 5px;
+    text-align: justify;
+
+}

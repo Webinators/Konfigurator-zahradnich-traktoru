@@ -1,0 +1,431 @@
+#editortextarea 
+{
+position: relative;
+z-index: 500;
+}
+
+#spravce_galerie 
+{
+position: fixed;
+top: 6%;
+left: 38%;
+margin: 0px auto;
+z-index: 500;
+}
+
+#textareaeditorobal 
+{
+position: relative;
+height: 80%;
+margin: 0px auto;
+width: 750px;
+border-radius: 6px;
+-moz-border-radius: 6px;
+-webkit-border-radius: 6px;
+z-index: 999999;
+color: #ffffff;
+}
+
+#spravce_galerie_obal 
+{
+position: relative;
+height: 80%;
+margin: 0px auto;
+width: 99%;
+border-radius: 6px;
+-moz-border-radius: 6px;
+-webkit-border-radius: 6px;
+z-index: 999999;
+color: #ffffff;
+}
+
+#dataprotextareueditor 
+{
+height: 100%;
+width: 100%;
+padding-top: 20px;
+background-color: #ffffff;
+font-famiy: Arial;
+}
+
+#data_spravce_galerie
+{
+height: 100%;
+width: 100%;
+padding-top: 20px;
+background-color: #ffffff;
+font-famiy: Arial;
+}
+
+.listaeditorutextu 
+{
+position: relative;
+margin-left:-1px;
+height: 28px;
+width: 100%;
+background-color: #a5b63a;
+font-weight: bold;
+border-left: 1px #2e2e2e solid;
+border-top: 1px #2e2e2e solid;
+border-right: 1px #2e2e2e solid;
+text-align: center;
+}
+
+#editor_textarea_pruhledny_pozadi 
+{
+position: fixed;
+_position: relative;
+top: 0px;
+left: 0px;
+width: 100%;
+height: 100%;
+z-index: 10000;
+background-color: #000000;
+-khtml-opacity: 0.85; 
+-moz-opacity: 0.85; 
+-ms-filter:"alpha(opacity=85)";
+filter:alpha(opacity=85);
+filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0.85);
+opacity: 0.85; 
+}
+
+.obal_aktualit 
+{
+position: relative;
+float: left;
+  display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+  display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+  display: -ms-flexbox;      /* TWEENER - IE 10 */
+  display: -webkit-flex;     /* NEW - Chrome */
+  display: flex; 
+max-width: 1000px;
+width: 100%;
+padding: 0px 5px;
+-webkit-border-radius: 4px;
+-moz-border-radius: 4px;
+border-radius: 4px;
+margin: 0px auto;
+margin-top: 13px;
+}
+
+#AktualitySlideBtnContainer{
+  
+   position: absolute;
+   top: 0px;
+   display: inline-block;
+   left: 50%;
+   height: 100%;
+   z-index: 999;
+   min-width: 45px;
+ -webkit-transform: translateX(-50%);
+ -ms-transform: translateX(-50%);
+ transform: translateX(-50%);
+
+}
+
+.AktualitySlideBtn
+{
+ position: absolute;
+ cursor: pointer;
+ top: -25px;
+ left: -50%;
+ opacity: 0.4;
+-webkit-transition: opacity 1s, -webkit-transform 1s;
+    transition: opacity 1s, transform 1s;
+}
+
+.AktualitySlideBtn:hover{
+  opacity: 1; 
+}
+
+#AktualitySlideBtnL{
+ display: none;
+}
+
+#AktualitySlideBtnR{
+ top: auto;
+ bottom: 0px;
+}
+
+.middleTop{
+
+ top: 50%;
+ -webkit-transform: translateY(-50%);
+ -ms-transform: translateY(-50%);
+ transform: translateY(-50%);
+
+}
+
+#krajnidivaktualit
+{
+position: relative;
+align-items: stretch;
+width: 23.5%;
+min-height: 300px;
+display:inline-block;
+margin: 0px;
+padding-top: 0px;
+margin-left: 7px;
+padding-bottom: 30px;
+text-align: center;
+background-color: #ffffff;
+padding-bottom: 25px;
+font-size: 12px;
+vertical-align: top;
+-webkit-border-radius: 4px;
+-moz-border-radius: 4px;
+border-radius: 4px;
+}
+
+.vnitrek 
+{
+text-align: left;
+color: #000000;
+padding: 0px 5px;
+font-size: 13px;
+font-family: Arial;
+}
+
+#nadpisproaktuality 
+{
+    padding: 3px 5px;
+    font-size: 13px;
+    min-height: 30px;
+    font-family: Arial;
+    color: #000;
+    text-align: center;
+    font-weight: bold;
+    background-color: #afe41a;
+    border-bottom: 1px #acacac solid;
+-webkit-border-top-left-radius: 4px;
+-webkit-border-top-right-radius: 4px;
+-moz-border-radius-topleft: 4px;
+-moz-border-radius-topright: 4px;
+border-top-left-radius: 4px;
+border-top-right-radius: 4px;
+}
+
+.obsahovacastaktualit {position: relative;margin-top: -14px;padding: 4px 4px;text-align: left;font-size: 11px;
+padding-right: 15px;}
+
+.obsahovacastaktualit p {font-size: 11px;}
+
+@media screen and (max-width: 700px){
+
+.obal_aktualit{
+display: block;
+}
+
+#krajnidivaktualit{
+
+width: 95%;
+min-height: 50px;
+
+}
+
+.obsahovacastaktualit {
+ height: auto;
+}
+
+#prevAktuality
+{
+ z-index: 500;
+ left: 0px;
+ top: 350px;
+}
+
+#nextAktuality
+{
+ z-index: 500;
+ right: 0px;
+ top: 350px;
+}
+
+}
+
+.obsahovacastaktualit > .ps-scrollbar-y-rail {
+  opacity: 0.6;
+}
+
+.obsahovacastaktualit p {margin: 0px;font-size: 13px;}
+.obsahovacastaktualit img {position: relative;max-width: 170px;float: none;}
+
+.aktaulity_seznam_odkazu 
+{
+background-color: #dce3b2;
+width: 95%;
+padding: 5px 5px;
+}
+.aktaulity_seznam_odkazu hr {margin: 0px;margin-top: 3px; padding: 0px;}
+
+.aktaulity_link:link, .aktaulity_link:visited, .aktaulity_link:active {font-size: 13px;text-decoration: none;color: #000000;}
+.aktaulity_link:hover {font-size: 13px;text-decoration: underline;}
+
+
+#editaktuality {color: #ff0000;float: right;margin-right: 8px;text-decoration: none;cursor: pointer;font-weight: bold;}
+#editaktualitypo {cursor: pointer;}
+
+#odkaz_aktualit {position: absolute;bottom: 0px;border-top: 1px #000 solid;width: 100%;background-color: #000;color: #fff;text-decoration: none;cursor: pointer;font-weight: bold;padding: 7px 0px;-webkit-border-bottom-right-radius: 4px;
+-webkit-border-bottom-left-radius: 4px;
+-moz-border-radius-bottomright: 4px;
+-moz-border-radius-bottomleft: 4px;
+border-bottom-right-radius: 4px;
+border-bottom-left-radius: 4px;}
+#odkaz_aktualitpo {cursor: pointer;text-decoration: underline;}
+
+.oknovypsaniaktuality {display: none;}
+
+#aktuality_clanek_obsah 
+{
+position: relative;
+height: 80%;
+margin: 0px auto;
+top: 40px;
+width: 600px;
+border-radius: 6px;
+-moz-border-radius: 6px;-
+webkit-border-radius: 6px;
+z-index: 999999;
+color: #ffffff;
+}
+
+#newsdata 
+{
+height: 100%;
+width: 100%;
+overflow: auto;
+background-color: #ffffff;
+font-famiy: Arial;
+color: #000000;
+padding: 5px 15px;
+-moz-box-sizing: border-box; 
+-webkit-box-sizing: border-box; 
+box-sizing: border-box; 
+}
+
+#aktuality_podokno 
+{
+position: relative;
+margin: 0px auto;
+width: 90%;
+border: 1px #000 solid;
+}
+
+#aktuality_lista_podokna
+{
+position: relative;
+background-color: #a5b63a;
+width: 100%;
+font-weight: bold;
+text-align: center;
+padding: 2px 9px;
+-moz-box-sizing: border-box; 
+-webkit-box-sizing: border-box; 
+box-sizing: border-box;
+font-size: 16px;
+color: #000000;
+}
+
+#aktuality_obsahova_cast_podokna
+{
+width: 100%;
+padding: 5px 9px;
+-moz-box-sizing: border-box; 
+-webkit-box-sizing: border-box; 
+box-sizing: border-box; 
+background-color: #595858;
+color: #000000;
+}
+
+#aktuality_obsahova_cast_podokna textarea
+{
+min-height: 150px;_height: 150px;
+}
+
+#aktuality_obsahova_cast_podokna p
+{
+padding: 0px;
+margin: 0px;
+}
+
+.aktuality_zobrazovaci_tlacitko
+{
+padding: 6px 10px;
+background-color: #a5b63a;
+color: #000000;
+border-radius: 4px;
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+cursor: pointer;
+}
+
+.aktuality_soubory_k_nahrani{position: relative;display: inline;}
+.aktuality_soubory_k_nahrani ul{width: 150px;display: inline;position: relative;}
+.aktuality_soubory_k_nahrani ul li {list-style-type: none;display: inline;}
+.aktuality_soubory_k_nahrani ul li ul {display: none;}
+.aktuality_soubory_k_nahrani ul li:hover ul {display: inline;position: absolute;top: 20px;left: 0px;}
+
+
+#allowedtypesfile 
+{
+position: relative;
+padding: 8px 10px;
+top: 5px;
+left: 0px;
+background-color: #2e2e2e;
+width: 150px;
+z-index: 99999;
+border-radius: 4px;
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+}
+
+#popisek_img
+{
+width: 50%;
+background-color: #ffffff;
+padding: 5px 4px;
+border-bottom: 1px #000 solid;
+border-left: 1px #000 solid;
+border-right: 1px #000 solid;
+font-size: 12px;
+}
+
+#popisek_img img {max-width: 90%;}
+
+#popisek_priloha_lista
+{
+position: relative;
+border-top: 1px #000 solid;
+border-left: 1px #000 solid;
+border-right: 1px #000 solid;
+width: 50%;
+font-weight: bold;
+padding: 2px 4px;
+background-color: #a5b63a;
+color: #000000;
+text-align: center;
+}
+
+#popisek_priloha_prilozit_soubor
+{
+position: relative;
+margin-top: 10px;
+width: 50%;
+padding: 5px 0px;
+background-color: #ffffff;
+border-bottom: 1px #000 solid;
+border-left: 1px #000 solid;
+border-right: 1px #000 solid;
+}
+
+#popisek_priloha_vlozit
+{
+cursor: pointer;
+}
+
+#obal_popisek_priloha
+{
+position: relative;
+margin-top: 10px;
+}

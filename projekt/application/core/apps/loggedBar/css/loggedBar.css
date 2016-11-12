@@ -1,0 +1,278 @@
+/* Nastaveni grafiky */
+
+#loginbutton
+{
+background-color: #751204;
+color: #ffffff;
+font-family: Arial;
+font-weight: bold;
+}
+
+#loggedBar
+{
+background-color: #2e2e2e;
+color: #ffffff;
+font-family: Arial;
+font-weight: bold;
+border-bottom: 1px #000 solid;
+font-size: 12px;
+}
+
+#loggedBarContentObal:hover
+{
+background-color: #18456a;
+}
+
+#loggedBarlogout
+{
+color: orange;
+}
+
+#LoggedBarsearchedUsers
+{
+background-color: #e3e3e3;
+color: #ffffff;
+border: 1px #2e2e2e solid;
+}
+
+.LoggedBarsSearchedUserBoxOnmouseOver
+{
+background-color: #1472bb;
+}
+
+.LoggedBarsSearchedUserBoxOnmouseOver table
+{
+color: #ffffff;
+background-color: #434343;
+}
+
+.LoggedBarsSearchedUserImgBackground
+{
+text-align: center;
+background-color: #b4b4b4;
+}
+
+.LoggedBarsSearchedUserImgBackgroundOnmouseOver
+{
+background-color: #015190;
+}
+
+/* Ostatni nastaveni */
+
+#loggedBar
+{
+position: fixed;
+top: 0px;
+left: 0px;
+width: 100%;
+height: 35px;
+z-index: 999999;
+-webkit-box-shadow: 12px 10px 8px -3px rgba(0,0,0,0.49);
+-moz-box-shadow: 12px 10px 8px -3px rgba(0,0,0,0.49);
+box-shadow: 12px 10px 8px -3px rgba(0,0,0,0.49);
+}
+
+#loggedbarobal
+{
+position: relative;
+top: 0px;
+width: 60%;
+height: 100%;
+margin: 0px auto;
+}
+
+#userInLoggedBar
+{
+position: absolute;
+top: 3%;
+right: 15px;
+height: 90%;
+display: -webkit-box;
+display: -webkit-flex;
+display: -moz-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-flex-align: center;
+-ms-flex-align: center;
+-webkit-align-items: center;
+align-items: center;
+}
+
+#loggedBarContentObal
+{
+height: 95%;
+cursor: pointer;
+padding: 3px;
+display: -webkit-box;
+display: -webkit-flex;
+display: -moz-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-flex-align: center;
+-ms-flex-align: center;
+-webkit-align-items: center;
+align-items: center;
+-moz-box-sizing: border-box; 
+-webkit-box-sizing: border-box; 
+box-sizing: border-box;
+-webkit-border-radius: 4px;
+-moz-border-radius: 4px;
+border-radius: 4px;
+}
+
+
+#loggedBarContentObal:hover
+{
+height: 95%;
+cursor: pointer;
+padding: 3px;
+display: -webkit-box;
+display: -webkit-flex;
+display: -moz-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-flex-align: center;
+-ms-flex-align: center;
+-webkit-align-items: center;
+align-items: center;
+-moz-box-sizing: border-box; 
+-webkit-box-sizing: border-box; 
+box-sizing: border-box;
+-webkit-border-radius: 4px;
+-moz-border-radius: 4px;
+border-radius: 4px;
+}
+
+#loggedBarContentObal img, #loggedBarContentObal:hover img 
+{
+height: 20px;
+vertical-align: middle;
+border: 0.5px #fff solid;
+}
+
+#loggedBarContentObal a{
+color: #ffffff;
+font-family: Arial;
+font-weight: bold;
+font-size: 12px;
+text-decoration: none;
+}
+
+#loggedBarlogout
+{
+cursor: pointer;
+}
+
+#LoggedBarSearcherUsers
+{
+position: relative;
+height: 45%;
+padding: 3px;
+width: 200px;
+-webkit-border-radius: 4px;
+-moz-border-radius: 4px;
+border-radius: 4px;
+border: 0px;
+}
+
+#LoggedBarsearchedUsers
+{
+display: none;
+position: absolute;
+top: 26px;
+left: 0px;
+width: 280px;
+min-height: 100px;
+max-height: 400px;
+padding-bottom: 5px;
+overflow-y: scroll;
+overflow-x: hidden;
+-webkit-box-shadow: 12px 10px 8px -3px rgba(0,0,0,0.49);
+-moz-box-shadow: 12px 10px 8px -3px rgba(0,0,0,0.49);
+box-shadow: 12px 10px 8px -3px rgba(0,0,0,0.49);
+}
+
+#LoggedBarsearchedUsersdata
+{
+position: relative;
+}
+
+#LoggedBarsearchedUsers img
+{
+height: 40px;
+padding-right: 15px;
+border: 0px;
+}
+
+.LoggedBarsSearchedUserBox
+{
+cursor: pointer;
+-moz-box-sizing: border-box; 
+-webkit-box-sizing: border-box; 
+box-sizing: border-box;
+background-color: #cbcbcb;
+color: #000000;
+}
+
+.LoggedBarsSearchedUserBoxOnmouseOver
+{
+cursor: pointer;
+-moz-box-sizing: border-box; 
+-webkit-box-sizing: border-box; 
+box-sizing: border-box;
+}
+       
+.LoggedBarsSearchedUserBox table, .LoggedBarsSearchedUserBoxOnmouseOver table
+{
+border-collapse: collapse;
+border: 0px;
+padding: 0px;
+margin: 0px;
+font-size: 12px;
+width: 285px;
+border-bottom: 1px #000000 solid;
+}
+
+.LoggedBarsSearchedUserBox table td, .LoggedBarsSearchedUserBoxOnmouseOver table td
+{
+padding: 4px;
+}
+
+.LoggedBarsSearchedUserBoxOnmouseOver table
+{
+width: 285px;
+}
+
+.LoggedBarsSearchedUserImgBackground
+{
+width: 28px;
+}
+
+.LoggedBarsSearchedUserImgBackgroundOnmouseOver
+{
+text-align: center;
+width: 28px;
+}
+
+.LoggedBarsSearchedUserImgBackground img, .LoggedBarsSearchedUserImgBackgroundOnmouseOver img
+{
+position: relative;
+display-inline: block;
+left: 7px;
+}
+
+#loginbutton
+{
+position: fixed;
+right: 20px;
+top: 0px;
+padding: 5px 30px;
+-webkit-border-bottom-right-radius: 6px;
+-webkit-border-bottom-left-radius: 6px;
+-moz-border-radius-bottomright: 6px;
+-moz-border-radius-bottomleft: 6px;
+border-bottom-right-radius: 6px;
+border-bottom-left-radius: 6px;
+cursor: pointer;
+z-index: 99999999;
+}

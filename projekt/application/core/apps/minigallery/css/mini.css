@@ -1,0 +1,27 @@
+.miniGallery {
+
+    margin-top: 10px;
+    background-color: #fff;
+    border: 1px #2e2e2e solid;
+    padding-bottom: 5px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+
+}
+
+.miniGalleryFiles {
+
+    position: relative;
+    background-color: #7c8275;
+    padding: 8px;
+    border-bottom: 1px #2e2e2e solid;
+
+    -webkit-border-top-left-radius: 8px;
+    -webkit-border-top-right-radius: 8px;
+    -moz-border-radius-topleft: 8px;
+    -moz-border-radius-topright: 8px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    
+}

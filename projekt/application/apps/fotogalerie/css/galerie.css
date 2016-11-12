@@ -1,0 +1,45 @@
+
+.obal_fotogalerie {
+    position: relative;
+    margin-left: 5px;
+    margin-top: 5px;
+    padding: 4px 5px;
+    text-align: center;
+    color: #000;
+    max-width: 200px;
+    overflow: hidden;
+}
+
+.fotogalerie_nadpis{
+
+    top: 0px;
+    left: 10px;
+    position: absolute;
+    background-color: #000;
+    color: #fff;
+    padding: 3px;
+
+}
+
+.fotogalerie_popis {
+
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background-color: #000;
+    color: #fff;
+    padding: 3px;
+
+}
+
+.fotogalerie_nadpis_last{
+    top: 10px;
+    left: 10px;   
+    padding: 5px;
+}
+
+.fotogalerie_popis_last{
+    bottom: 12px;
+    left: 10px;  
+    padding: 5px; 
+}

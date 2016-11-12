@@ -1,0 +1,1 @@
+registratura/classes/,registratura/fileuploader/,kalendar/classes/
