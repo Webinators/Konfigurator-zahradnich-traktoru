@@ -30,60 +30,13 @@ class Shop {
 
     private function makeTables() {
 
-        $this->database->createTable("Kategorie", "
-        
-        ID_kategorie INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        Nazev VARCHAR(100) NOT NULL
-        
-        ");
+	$adminShop = new ShopAdmin();
 
-        $this->database->createTable("Produkt", "
-        
-        ID_produkt INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        Nazev VARCHAR(100) NOT NULL,
-        Vyrobce VARCHAR(100) NOT NULL,
-        Popis TEXT,
-        Cena DOUBLE NOT NULL,
-        Kategorie INT NOT NULL REfERENCES Kategorie(ID_kategorie)
-        
-        ");
-
-        $this->database->createTable("Parametr", "
-        
-        ID_parametr INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        Nazev VARCHAR(100) NOT NULL,
-        Jednotka
-        
-        ");
-
-        $this->database->createTable("KategorieParam", "
-        
-        ID_kategorie INT NOT NULL REFERENCES Kategorie(ID_kategorie),
-        ID_parametr INT NOT NULL REFERENCES Parametr(ID_parametr),
-        Jednotka VARCHAR(10)
-
-        ");
-
-        $this->database->createTable("ProduktParam", "
-        
-        ID_produkt INT NOT NULL REFERENCES Produkt(ID_produkt),
-        ID_parametr INT NOT NULL REFERENCES Parametr(ID_parametr),
-        Hodnota TEXT
-        
-        ");
     }
 
     public function printProducts() {
 
-        $output = '
-        
-        <a href="index.php?page=shop/sprava-parametru-produktu&info=Správa parametrů produktu">Správa parametrů</a>
-        <a href="index.php?page=shop/sprava-kategorii&info=Správa kategorií produktů">Správa kategorií</a>
-        <a href="index.php?page=shop/sprava-produktu&info=Správa produktů">Správa produktů</a>    
-        
-        ';
-
-
+        $output = '';
 
         $orderby = "ID_produkt->DESC";
 

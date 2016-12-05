@@ -18,9 +18,6 @@ class ShopAdmin
     private $relPath;
     private $urlPath;
 
-    private $form;
-    private $formE;
-
     function __construct()
     {
 
@@ -41,7 +38,8 @@ class ShopAdmin
 
         $this->db->createTable("Kategorie", "
             ID_kategorie INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            Nazev_k VARCHAR(100) NOT NULL
+            Nazev_k VARCHAR(100) NOT NULL,
+            Visible tinyint(4) NOT NULL DEFAULT(1)
         ");
 
         $this->db->createTable("Produkt", "
@@ -50,6 +48,7 @@ class ShopAdmin
             Popis TEXT,
             Cena DOUBLE NOT NULL,
             K_cene VARCHAR(150),
+            Vyrobce VARCHAR(100) NOT NULL,
             Kategorie INT NOT NULL REfERENCES Kategorie(ID_kategorie)
         ");
 
@@ -57,13 +56,15 @@ class ShopAdmin
             ID_parametr INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
             Nazev VARCHAR(100) NOT NULL,
             Popisek VARCHAR(100),
-            Pevne_h TINYINT NOT NULL DEFAULT(0),
-            Typ VARCHAR(10)
+            Jednotka VARCHAR(30),
+            Pevne_h tinyint NOT NULL DEFAULT(0),
+            Typ VARCHAR(15)
         ");
 
         $this->db->createTable("KategorieParam", "
             ID_kategorie INT NOT NULL REFERENCES Kategorie(ID_kategorie),
-            ID_parametr INT NOT NULL REFERENCES Parametr(ID_parametr)
+            ID_parametr INT NOT NULL REFERENCES Parametr(ID_parametr),
+            Order INT NOT NULL DEFAULT(0)
         ");
 
         $this->db->createTable("ProduktParam", "
@@ -84,84 +85,68 @@ class ShopAdmin
 
     }
 
-    public function CategoryList()
+    public function CategoryList($order = "ID_kategorie->ASC")
     {
 
-        $order = $_GET["order"];
+        $view = new View($this->Root->getAppPath(__DIR__,true), "kategorie/kategorie");
+        $view->title = "Správa kategorií";
 
         $this->db->addWherePart("Visible","=","1");
-        $this->db->selectFromTable("*", "Kategorie", "", $order);
-        $categories = $this->db->getRows();
+        $this->db->selectFromTable("*", "Kategorie","",$order);
 
-        $data = '<table width="100%" border="1">';
+        $view->categories = $this->db->getRows();
+        $view->icons = $this->Icons;
 
-        foreach ($categories as $category) {
-
-            $data .= '<tr><td>' . $category["Nazev_k"] . '</td><td><a href="index.php?page=shop/kategorie/edit&ID_kategorie=' . $category["ID_kategorie"] . '" data-target="tr">' . $this->Icons->getIcon("edit") . '</a></td><td><a class="ajaxDel" data-destination="tr" href="' . $this->urlPath . 'load/kategorie/remove.php?id=' . $category["ID_kategorie"] . '">' . $this->Icons->getIcon("remove") . '</a></td></tr>';
-
-        }
-
-        $data .= '</table>';
-
-        $options = '
-            <a href="index.php?page=shop/kategorie/add">' . $this->Icons->getIcon("add", "25px", "Přidat kategorii") . '</a>
-        ';
-
-
-        $editor = new Editor();
-        $output = $editor->build($data, $options, "relative");
-
-        return $output;
+        return $view->display("main");
 
     }
 
     public function categoryForm($data = array())
     {
 
-        $this->form = Form::getForm("FormTable", $this->urlPath . "load/kategorie/save.php");
+        $view = new View($this->Root->getAppPath(__DIR__,true), "kategorie/form");
+        $view->title = "Editace kategorie";
 
-        $this->form->addHiddenItem($this->formE->Input()->Hidden("ID_kategorie")->Value($data["ID_kategorie"]));
-        $this->form->addItem("Název kategorie", $this->formE->Input()->Text("Nazev_k")->Value($data["Nazev_k"]));
+        $view->form = Form::getForm("FormTable", $this->urlPath . "shop/ShopAdmin/saveCategory");
+        $view->formE = new FormElements();
 
-        $this->db->selectFromTable("*", "Parametr");
-        $params = $this->db->getRows();
+        $this->db->addWherePart("ID_kategorie", "=", $data["ID_kategorie"]);
+        $this->db->selectFromTable("*", "Parametr p RIGHT JOIN KategorieParam kp ON p.ID_parametr = kp.ID_parametr","","kp.Order->ASC");
+        $view->params = $this->db->getRows();
 
         if(!empty($data)) {
             $this->db->addWherePart("ID_kategorie", "=", $data["ID_kategorie"]);
             $this->db->selectFromTable("ID_parametr", "KategorieParam");
-            $chosenP = $this->db->getRows();
+            $view->chosenP = $this->db->getRows();
         } else {
-            $chosenP = array();
+            $view->chosenP = array();
         }
 
-        $data = '<br /><br /><label>Zvolte parametry pro tuto kategorii: </label><br /><br />';
-        $this->formE->setDataFromDb($params, "ID_parametr", "Nazev");
-        $data .= $this->formE->CheckboxField("parametr", $chosenP);
+        return $view->display("main");
 
-        $this->form->addItem("", $data);
+    }
 
-        if (!empty($data)) {
-            $this->form->addButton($this->formE->Button()->Submit("save", "Uložit kategorii"));
+    public function editCategory($id = null)
+    {
+
+        if($id != null) {
+
+            $this->db->addWherePart("ID_kategorie", "=", $id);
+            $this->db->selectFromTable("*", "Kategorie");
+
+            $data = $this->db->getRows();
+
+            return $this->categoryForm($data[0]);
+
         } else {
-            $this->form->addButton($this->formE->Button()->Submit("add", "Přidat kategorii"));
+            throw new Exception("Není uvedené ID produktu");
         }
-
-        return $this->form;
     }
 
-    public function editCategory($data)
+    public function saveCategory()
     {
 
-        $this->db->addWherePart("ID_kategorie", "=", $data["ID_kategorie"]);
-        $this->db->selectFromTable("*", "Kategorie");
-
-        $data = $this->db->getRows();
-
-        return $this->categoryForm($data[0]);
-    }
-
-    public function saveCategory($data)
-    {
+        $data = $_POST;
 
         if ($data["ID_kategorie"] != '') {
 
@@ -191,129 +176,98 @@ class ShopAdmin
             }
         }
 
-        Redirector::redirect('' . $this->Root->getPathToProject(false, true) . 'index.php?page=shop/sprava-kategorii');
+        Redirector::redirect('' . $this->Root->getPathToProject(false, true) . 'shop/ShopAdmin/CategoryList');
 
     }
 
-    public function removeCategory($id)
+    public function removeCategory($id = null)
     {
 
-        $this->db->addWherePart("ID_kategorie", "=", $id);
-        $this->db->deleteFromTable("KategorieParam");
+        if ($id != null) {
+            $this->db->addWherePart("ID_kategorie", "=", $id);
+            $this->db->deleteFromTable("KategorieParam");
 
-        $this->db->addWherePart("ID_kategorie", "=", $id);
-        $this->db->updateTable("Kategorie","Visible",array(0));
+            $this->db->addWherePart("ID_kategorie", "=", $id);
+            $this->db->updateTable("Kategorie", "Visible", array(0));
 
-        echo "0->Kategorie úspěšně smazána";
-
-    }
-
-    public function parametrList()
-    {
-
-        $order = $_GET["order"];
-
-        $this->db->selectFromTable("*", "Parametr", "", $order);
-        $params = $this->db->getRows();
-
-        $data = '<table id="parametersTable" width="100%" border="1">';
-
-        foreach ($params as $param) {
-
-            $data .= $this->renderParam($param);
-
+            return "0->Kategorie úspěšně smazána";
+        } else {
+            throw new Exception("Není uvedené ID produktu");
         }
 
-        $data .= '</table>';
+    }
 
-        $options = '
-            <a class="ajaxWin" href="' . $this->urlPath . 'pages/parametr/add.php">' . $this->Icons->getIcon("add", "25px", "Přidat parametr") . '</a>
-        ';
+    public function parametrList($order = "ID_parametr->ASC")
+    {
 
+        $view = new View($this->Root->getAppPath(__DIR__,true), "parametr/parametr");
+        $view->title = "Správa paramterů";
 
-        $editor = new Editor();
-        $output = $editor->build($data, $options, "relative");
-        $output .= $editor->build("", $options, "relative");
+        $this->db->selectFromTable("*", "Parametr","",$order);
+        $view->params = $this->db->getRows();
+        $view->icons = $this->Icons;
+        $view->renderer = $this;
 
-        return $output;
+        $view->url = $this->Root->getPathToProject(false,true);
+
+        return $view->display("main");
 
     }
 
     public function renderParam($data)
     {
-
-        return '<tr><td>' . $data["Nazev"] . ' (' . $data["Jednotka"] . ') <span style="font-size: 0.8em;">' . $data["Popisek"] . '</span></td><td><a class="ajaxWin" data-win-title="Úprava parametru" href="' . $this->urlPath . 'pages/parametr/edit.php?ID_parametr=' . $data["ID_parametr"] . '">' . $this->Icons->getIcon("edit") . '</a></td><td><a class="ajaxDel" data-destination="tr" href="' . $this->urlPath . 'load/parametr/remove.php?id=' . $data["ID_parametr"] . '">' . $this->Icons->getIcon("remove") . '</a></td></tr>';
-
+        $url = $this->Root->getPathToProject(false,true);
+        return '<tr><td>' . $data["Nazev"] . ' (' . $data["Jednotka"] . ') <span style="font-size: 0.8em;">' . $data["Popisek"] . '</span></td><td><a class="ajaxWin" data-win-title="Úprava parametru" href="' . $url . 'shop/ShopAdmin/editParametr/' . $data["ID_parametr"] . '">' . $this->Icons->getIcon("edit") . '</a></td><td><a class="ajaxDel" data-destination="tr" href="' . $url . 'shop/ShopAdmin/removeParametr/' . $data["ID_parametr"] . '">' . $this->Icons->getIcon("remove") . '</a></td></tr>';
     }
 
     public function parametrForm($data = array())
     {
 
-        $this->form = Form::getForm("FormTable", $this->urlPath . "load/parametr/save.php");
+        $view = new View($this->Root->getAppPath(__DIR__,true), "parametr/form");
+        $view->title = "Správa parametrů";
 
-        $this->form->addHiddenItem($this->formE->Input()->Hidden("ID_parametr")->Value($data["ID_parametr"]));
-        $this->form->addItem("Název parametru", $this->formE->Input()->Text("Nazev")->Value($data["Nazev"]));
-        $this->form->addItem("Jednotka parametru", $this->formE->Input()->Text("Jednotka")->Value($data["Jednotka"]));
-        $this->form->addItem("Popisek", $this->formE->Input()->Text("Popisek")->Value($data["Popisek"]));
+        $view->form = Form::getForm("FormTable", $this->Root->getPathToProject(false, true) . "shop/ShopAdmin/load/parametr/saveParametr");
+        $view->formE = new FormElements();
+        $view->data = $data;
 
-        $values = array(array("select","radio","cehckbox"), array("selectbox (výběrové pole)", "radio (přepínač)", "checkbox (zatrhávací políčka)"));
-        $this->formE->setDataFromArray($values[0],$values[1]);
+        $view->icons = $this->Icons;
+
+        $view->packages = $this->Root->getAppPath(__DIR__, false, true);
+        $view->url = $this->Root->getPathToProject(false, true);
 
         if(!empty($data)) {
             $this->db->addWherePart("ID_parametr", "=", $data["ID_parametr"]);
             $this->db->selectFromTable("*", "Parametr NATURAL JOIN ParametrHodnota NATURAL JOIN HodnotyList");
-            $params = $this->db->getRows();
+            $view->params = $this->db->getRows();
         } else {
-            $params = array();
+            $view->params = array();
         }
 
-        $paramsData = ''.$this->formE->Input()->CheckBox("Pevne_h")->Checked($data["Pevne_h"])->Value("1")->Rest('data-handler="ProductParamsEnable1"').'
-
-            <div id="ProductParamsEnable1Target" style="margin-top: 10px;display: '.(($data["Pevne_h"] == 1 && $data["Pevne_h"] != '') ? "block" : "none" ).';">
-
-                Vyberte způsob vybírání hodnot: '.$this->formE->Select("Pevne_h_type",$data["Typ"],array(true,"")).'
-
-               <br /><br /> Definujte hodnoty: <table style="display: inline-block;">';
-
-        $paramsData .= '<tr style="display: none;"><td>'.$this->formE->Input()->Hidden("Pevne_h_id[]").' '.$this->formE->Input()->Text("Pevne_h_val[]")->_Class("productParam").'</td><td> <a class="removeProductParam" style="cursor: pointer;">&nbsp;&nbsp;'.$this->Icons->getIcon("remove","20px").'</a>&nbsp;&nbsp;<a class="productParamAddAfter" style="cursor: pointer;">'.$this->Icons->getIcon("addrow","20px").'</a> </td></tr>';
-
-        foreach($params as $param){
-            $paramsData .= '<tr><td>'.$this->formE->Input()->Hidden("Pevne_h_id[]")->Value($param["ID_hodnota"]).' '.$this->formE->Input()->Text("Pevne_h_val[]")->Value($param["Hodnota_h"])->_Class("productParam").'</td><td> <a class="removeProductParam" style="cursor: pointer;">&nbsp;&nbsp;'.$this->Icons->getIcon("remove","20px").'</a>&nbsp;&nbsp;<a class="productParamAddAfter" style="cursor: pointer;">'.$this->Icons->getIcon("addrow","20px").'</a> </td></tr>';
-        }
-
-        $this->form->addItem("Definování pevných hodnot", $paramsData.'
-
-                <tr><td>'.$this->formE->Input()->Hidden("Pevne_h_id[]").' '.$this->formE->Input()->Text("Pevne_h_val[]").' </td><td>&nbsp;&nbsp; '.$this->Icons->getIcon("add","20px","Přidat další parametr",'class="productParam"').'</td></tr>
-
-                </table>
-
-            </div>
-
-        ');
-
-        if (!empty($data)) {
-            $this->form->addButton($this->formE->Button()->Submit("save", "Uložit parametr")->_class("ajaxSave")->Rest('data-destination="tr" data-win-closeParent="true"'));
-        } else {
-            $this->form->addButton($this->formE->Button()->Submit("add", "Přidat parametr")->_class("ajaxAdd")->Rest('data-destination="#parametersTable" data-win-closeParent="true"'));
-        }
-
-        return $this->form;
-    }
-
-    public function editParametr($data)
-    {
-
-        $this->db->addWherePart("ID_parametr", "=", $data["ID_parametr"]);
-        $this->db->selectFromTable("*", "Parametr");
-
-        $data = $this->db->getRows();
-
-        return $this->parametrForm($data[0]);
+        return $view->display("main");
 
     }
 
-    public function saveParametr($data)
+    public function editParametr($id = null)
     {
+
+        if ($id != null) {
+
+            $this->db->addWherePart("ID_parametr", "=", $id);
+            $this->db->selectFromTable("*", "Parametr");
+
+            $data = $this->db->getRows();
+
+            return $this->parametrForm($data[0]);
+
+        } else {
+            throw new Exception("Není uvedené ID produktu");
+        }
+    }
+
+    public function saveParametr()
+    {
+
+        $data = $_POST;
 
         if ($data["ID_parametr"] != '') {
 
@@ -327,10 +281,8 @@ class ShopAdmin
 
         }
 
-
         $this->db->addWherePart("ID_parametr", "=", $data["ID_parametr"]);
         $this->db->updateTable("Parametr", "Pevne_h, Typ", array($data["Pevne_h"], $data["Pevne_h_type"]));
-
 
         if($data["Pevne_h"] == 1) {
 
@@ -381,80 +333,66 @@ class ShopAdmin
 
     }
 
-    public function removeParametr($id)
+    public function removeParametr($id = null)
     {
 
-        $this->db->addWherePart("ID_parametr","=",$id);
-        $this->db->deleteFromTable("KategorieParam");
+        if ($id != null) {
+            $this->db->addWherePart("ID_parametr", "=", $id);
+            $this->db->deleteFromTable("KategorieParam");
 
-        $this->db->addWherePart("ID_parametr","=",$id);
-        $this->db->deleteFromTable("ProduktParam");
+            $this->db->addWherePart("ID_parametr", "=", $id);
+            $this->db->deleteFromTable("ProduktParam");
 
-        $this->db->addWherePart("ID_parametr", "=", $id);
-        $this->db->deleteFromTable("Parametr");
-
+            $this->db->addWherePart("ID_parametr", "=", $id);
+            $this->db->deleteFromTable("Parametr");
+        } else {
+            throw new Exception("Není uvedené ID produktu");
+        }
     }
 
 
-    public function productList()
+    public function productList($order = "ID_produkt->ASC")
     {
 
-        $order = $_GET["order"];
+        $view = new View($this->Root->getAppPath(__DIR__,true), "produkt/produkt");
+        $view->title = "Správa produktů";
+        $view->icons = $this->Icons;
 
         $this->db->selectFromTable("*", "Produkt", "", $order);
-        $products = $this->db->getRows();
+        $view->products = $this->db->getRows();
 
-        $data = '<table width="100%" border="1">';
-
-        foreach ($products as $product) {
-
-            $data .= '<tr><td>' . $product["Nazev_p"] . '</td><td><a href="index.php?page=shop/produkt/edit&ID_produkt=' . $product["ID_produkt"] . '" data-target="tr">' . $this->Icons->getIcon("edit") . '</a></td><td><a class="ajaxDel" data-destination="tr" href="' . $this->urlPath . 'load/produkt/remove.php?id=' . $product["ID_produkt"] . '">' . $this->Icons->getIcon("remove") . '</a></td></tr>';
-
-        }
-
-        $data .= '</table>';
-
-        $options = '
-            <a href="index.php?page=shop/produkt/add">' . $this->Icons->getIcon("add", "25px", "Přidat produkt") . '</a>
-        ';
-
-
-        $editor = new Editor();
-        $output = $editor->build($data, $options, "relative");
-
-        return $output;
-
+        return $view->display("main");
     }
 
     public function productForm($data = array())
     {
 
-        $this->form = Form::getForm("FormTable", $this->urlPath . "load/produkt/save.php");
-        //$this->form->Enctype("multipart/form-data");
+        $form = Form::getForm("FormTable", $this->urlPath . "load/produkt/save.php");
+        //$form->Enctype("multipart/form-data");
 
-        $this->form->addHiddenItem($this->formE->Input()->Hidden("ID_produkt")->Value($data["ID_produkt"]));
-        $this->form->addHiddenItem($this->formE->Input()->Hidden("Old_kategorie")->Value($data["ID_produkt"]));
+        $form->addHiddenItem($this->formE->Input()->Hidden("ID_produkt")->Value($data["ID_produkt"]));
+        $form->addHiddenItem($this->formE->Input()->Hidden("Old_kategorie")->Value($data["Kategorie"]));
 
-        $this->form->addItem("<b>Název produktu</b>", $this->formE->Input()->Text("Nazev_p")->Value($data["Nazev_p"]));
-        $this->form->addItem("<b>Výrobce</b>", $this->formE->Input()->Text("Vyrobce")->Value($data["Vyrobce"]));
+        $form->addItem("<b>Název produktu</b>", $this->formE->Input()->Text("Nazev_p")->Value($data["Nazev_p"]));
+        $form->addItem("<b>Výrobce</b>", $this->formE->Input()->Text("Vyrobce")->Value($data["Vyrobce"]));
 
         $this->db->addWherePart("Visible","=","1");
         $this->db->selectFromTable("ID_kategorie, Nazev_k", "Kategorie");
         $this->formE->setDataFromDb($this->db->getRows(), "ID_kategorie", "Nazev_k");
-        $this->form->addItem("<b>Kategorie</b>", $this->formE->Select("ID_kategorie", $data["Kategorie"], array(true, "vyberte kategorii"), true, 'class="productCategory" data-url="' . $this->urlPath . 'load/produkt/getParameters.php"'));
+        $form->addItem("<b>Kategorie</b>", $this->formE->Select("ID_kategorie", $data["Kategorie"], array(true, "vyberte kategorii"), true, 'class="productCategory" data-url="' . $this->urlPath . 'load/produkt/getParameters.php"'));
 
         $this->formE->clearData();
 
-        $this->form->addItem("<b>Cena</b>", $this->formE->Input()->Text("Cena")->Value($data["Cena"]));
-        $this->form->addItem("<b>K ceně</b>", $this->formE->Input()->Text("K_cene")->Value($data["K_cene"]));
+        $form->addItem("<b>Cena</b>", $this->formE->Input()->Text("Cena")->Value($data["Cena"]));
+        $form->addItem("<b>K ceně</b>", $this->formE->Input()->Text("K_cene")->Value($data["K_cene"]));
 
-        $this->form->addItem("<b>Popis</b>", $this->formE->TextAreaEditor("Popis",$data["Popis"]));
+        $form->addItem("<b>Popis</b>", $this->formE->TextAreaEditor("Popis",$data["Popis"]));
 
-        $this->form->addItem("", "");
-        $this->form->addItem("", '<label><b>Parametry produktu</b></label><br /><br /><div id="productCategoryDest" style="position: relative;">' . $this->renderProductParams($data) . '</div>');
+        $form->addItem("", "");
+        $form->addItem("", '<label><b>Parametry produktu</b></label><br /><br /><div id="productCategoryDest" style="position: relative;">' . $this->renderProductParams($data) . '</div>');
 
         if (!empty($data)) {
-            $this->form->addButton($this->formE->Button()->Submit("save", "Uložit produkt"));
+            $form->addButton($this->formE->Button()->Submit("save", "Uložit produkt"));
         }
 
         $minig = null;
@@ -468,13 +406,13 @@ class ShopAdmin
         }
 
         if (empty($data)) {
-            $this->form->addItem("", $minig);
-            $this->form->addButton($this->formE->Button()->Submit("add", "Přidat produkt")->_class("ajaxAdd"));
+            $form->addItem("", $minig);
+            $form->addButton($this->formE->Button()->Submit("add", "Přidat produkt"));
             $minig = "";
         }
 
 
-        return $this->form . $minig;
+        return $form . $minig;
     }
 
     public function getParameterValue($prodID, $paramID)
@@ -505,44 +443,50 @@ class ShopAdmin
         if ($data["Kategorie"] != '') {
 
             $this->db->addWherePart("ID_kategorie", "=", $data["Kategorie"]);
-            $this->db->selectFromTable("*", "KategorieParam kp JOIN Parametr p ON kp.ID_parametr = p.ID_parametr", "", "p.ID_parametr->ASC");
+            $this->db->selectFromTable("*", "KategorieParam kp LEFT JOIN Parametr p ON kp.ID_parametr = p.ID_parametr", "", "p.Nazev->ASC");
             $params = $this->db->getRows();
 
             $output .= '<table class="FlexTable" style="width: 100%;">';
 
+            if($data["ID_produkt"] != '') {
+                for ($i = 0; $i < count($params); $i++) {
+
+                    $this->db->addWherePart("ID_produkt", "=", $data["ID_produkt"]);
+                    $this->db->addWherePart("AND", "ID_parametr", "=", $params[$i]["ID_parametr"]);
+                    $this->db->selectFromTable("Hodnota", "ProduktParam pp NATURAL JOIN Parametr");
+
+                    if ($this->db->countRows() > 0) {
+                        $param = $this->db->getRows();
+                        $params[$i]["Hodnota"] = $param[0]["Hodnota"];
+                    } else {
+                        $params[$i]["Hodnota"] = "";
+                    }
+
+                }
+            }
+
             foreach($params as $param) {
 
-                if ($data["ID_produkt"] != '') {
-                    $this->db->addWherePart("ID_produkt", "=", $data["ID_produkt"]);
-                    $this->db->addWherePart("AND", "ID_parametr", "=", $param["ID_parametr"]);
-                    $this->db->selectFromTable("*", "ProduktParam NATURAL JOIN Parametr");
-                    $param = $this->db->getRows();
-                } else {
-                    $pom = $param;
-                    $param = array();
-                    $param[0] = $pom;
-                }
+                $output .= '<tr><td>' . $param["Nazev"] . ' ' . $param["Popisek"] . '</td><td>' . $this->formE->Input()->Hidden("paramsID[]")->Value($param["ID_parametr"]) . '';
 
-                $output .= '<tr><td>' . $param[0]["Nazev"] . ' ' . $param[0]["Popisek"] . '</td><td>' . $this->formE->Input()->Hidden("paramsID[]")->Value($param[0]["ID_parametr"]) . '';
+                if ($param["Pevne_h"] == 1) {
 
-                if ($param[0]["Pevne_h"] == 1) {
-
-                    $this->db->addWherePart("ID_parametr", "=", $param[0]["ID_parametr"]);
+                    $this->db->addWherePart("ID_parametr", "=", $param["ID_parametr"]);
                     $this->db->selectFromTable("*", "Parametr NATURAL JOIN ParametrHodnota NATURAL JOIN HodnotyList");
                     $paramVals = $this->db->getRows();
 
                     $this->formE->setDataFromDb($paramVals, "ID_hodnota", "Hodnota_h");
 
-                    switch ($param[0]["Typ"]) {
+                    switch ($param["Typ"]) {
 
                         case "select":
-                            $output .= $this->formE->Select("paramsVal[]", $param[0]["Hodnota"], array(true, ""));
+                            $output .= $this->formE->Select("paramsVal[]", $param["Hodnota"], array(true, ""));
                             break;
                         case "radio":
-                            $output .= $this->formE->RadioField("paramsVal[]", $param[0]["Hodnota"]);
+                            $output .= $this->formE->RadioField("paramsVal[]", $param["Hodnota"]);
                             break;
                         case "checkbox":
-                            $output .= $this->formE->CheckboxField("paramsVal[]", $param[0]["Hodnota"]);
+                            $output .= $this->formE->CheckboxField("paramsVal[]", $param["Hodnota"]);
                             break;
                         default:
                             break;
@@ -551,10 +495,10 @@ class ShopAdmin
                     $this->formE->clearData();
 
                 } else {
-                    $output .= $this->formE->Input()->Text("paramsVal[]")->Value($param[0]["Hodnota"]);
+                    $output .= $this->formE->Input()->Text("paramsVal[]")->Value($param["Hodnota"]);
                 }
 
-                $output .= '' . $param[0]["Jednotka"] . '</td></tr>';
+                $output .= '' . $param["Jednotka"] . '</td></tr>';
 
 
             }
@@ -570,24 +514,28 @@ class ShopAdmin
 
     }
 
-    public function editProduct($data)
+    public function editProduct($id = null)
     {
 
-        $this->db->addWherePart("ID_produkt", "=", $data["ID_produkt"]);
-        $this->db->selectFromTable("*", "Produkt");
+        if($id != null) {
 
-        $data = $this->db->getRows();
+            $this->db->addWherePart("ID_produkt", "=", $id);
+            $this->db->selectFromTable("*", "Produkt");
 
-        return $this->productForm($data[0]);
+            $data = $this->db->getRows();
+
+            return $this->productForm($data[0]);
+
+        } else {
+            throw new Exception("Není uvedené ID produktu");
+        }
 
     }
 
-    /**
-     * @param $data
-     * @throws Exception
-     */
     public function saveProduct($data)
     {
+
+        $data = $_POST;
 
         if ($data["ID_produkt"] != '') {
 
@@ -605,30 +553,17 @@ class ShopAdmin
             $this->db->addWherePart("ID_produkt", "=", $data["ID_produkt"]);
             $this->db->updateTable("Produkt", "Nazev_p, Popis, Cena, K_cene, Kategorie, Vyrobce", array($data["Nazev_p"], $data["Popis"], $data["Cena"], $data["K_cene"], $data["ID_kategorie"],$data["Vyrobce"]));
 
-            for ($i = 0; $i < count($data["paramsID"]); $i++) {
-
-                $this->db->addWherePart("ID_produkt", "=", $data["ID_produkt"]);
-                $this->db->addWherePart("AND", "ID_parametr", "=", $data["paramsID"][$i]);
-
-                $this->db->updateTable("ProduktParam", "Hodnota", array($data["paramsVal"][$i]));
-
-            }
-
         } else {
 
             $this->db->insertIntoTable("Nazev_p, Popis, Cena, K_cene, Kategorie, Vyrobce", "Produkt", array($data["Nazev_p"], $data["Popis"], $data["Cena"],$data["K_cene"] , $data["ID_kategorie"], $data["Vyrobce"]));
             $data["ID_produkt"] = $this->db->getLasInsertedId();
 
-            for ($i = 0; $i < count($data["paramsID"]); $i++) {
-                $this->db->insertIntoTable("ID_produkt, ID_parametr, Hodnota", "ProduktParam", array($data["ID_produkt"], $data["paramsID"][$i], $data["paramsVal"][$i]));
-            }
-
         }
-
 
         for ($i = 0; $i < count($data["paramsID"]); $i++) {
 
-            $this->db->addWherePart("ID_parametr", "=", $data["paramsID"][$i]);
+            $this->db->addWherePart("ID_produkt","=",$data["ID_produkt"]);
+            $this->db->addWherePart("AND", "ID_parametr", "=", $data["paramsID"][$i]);
             $this->db->selectFromTable("COUNT(ID_parametr) AS pocet", "ProduktParam");
             $count = $this->db->getRows();
 
@@ -651,7 +586,7 @@ class ShopAdmin
         $commander->moveToDir($data["ID_produkt"]);
 
         $mini = new MiniGallery($commander->getActualPath());
-        $mini->thumbResize("700,500,cropp")->allowedExtensions("jpg,png,gif,jpeg");
+        $mini->thumbResize("700,500,cropp")->allowedExtensions(FileUploader::IMAGES);
         $mini->uploadFiles();
 
         $msg = new Msg();
@@ -661,16 +596,22 @@ class ShopAdmin
 
     }
 
-    public function removeProduct($id)
+    public function removeProduct($id = null)
     {
 
-        $this->db->addWherePart("ID_produkt", "=", $id);
-        $this->db->deleteFromTable("ProduktParam");
+        if ($id != null) {
 
-        $this->db->addWherePart("ID_produkt", "=", $id);
-        $this->db->deleteFromTable("Produkt");
+            $this->db->addWherePart("ID_produkt", "=", $id);
+            $this->db->deleteFromTable("ProduktParam");
 
-        echo "0->Produkt úspěšně smazán";
+            $this->db->addWherePart("ID_produkt", "=", $id);
+            $this->db->deleteFromTable("Produkt");
+
+            return  "0->Produkt úspěšně smazán";
+
+        } else {
+            throw new Exception("Není uvedené ID produktu");
+        }
 
     }
 

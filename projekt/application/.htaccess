@@ -1,0 +1,14 @@
+<IfModule mod_rewrite.c>
+
+RewriteEngine On
+
+RewriteCond %{SCRIPT_FILENAME} !-f
+RewriteRule ^$ index.php?url=
+
+RewriteCond %{SCRIPT_FILENAME} !-f
+
+RewriteCond %{REQUEST_URI} !(\.css|\.js|\.png|\.jpg|\.gif|robots\.txt)$ [NC]
+RewriteRule ^(.*)(?!.*\.php)$ index.php?url=$1 [QSA,L]
+
+
+</IfModule>

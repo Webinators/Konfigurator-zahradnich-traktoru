@@ -4,20 +4,16 @@ $path = dirname( realpath( __FILE__ ) )."/";
 $project = "rsp/";
 $registratura = "core/";
 
-define("PATH_TO_PROJECT", $project);
-define("ROOT", trim(str_replace(PATH_TO_PROJECT," ",$path)));
-define("PATH_TO_REGISTRATURA", $registratura);
-define("FULL_PATH_TO_REGISTRATURA", ROOT.PATH_TO_PROJECT.$registratura);
+define("PROJECT", $project);
+define("ROOT", trim(str_replace(PROJECT," ",$path)));
+define("CORE", $registratura);
+define("ABS_CORE", ROOT.PROJECT.$registratura);
 
-$r = file_get_contents(FULL_PATH_TO_REGISTRATURA."classes/root/root.txt");
+require_once(ABS_CORE."config.php");
 
-if($r != ROOT.",".PATH_TO_PROJECT."," . PATH_TO_REGISTRATURA) {
-    $f = fopen(FULL_PATH_TO_REGISTRATURA . "classes/root/root.txt", "w");
-    $f = fwrite($f, ROOT . "," . PATH_TO_PROJECT . "," . PATH_TO_REGISTRATURA);
-    fclose($f);
-}
+$tree = new TreeDirectory();
 
-require_once(FULL_PATH_TO_REGISTRATURA."config.php");
+define("URL", $tree->getPathToProject(false, true));
 
 $Loader->addPath("apps/");
 
