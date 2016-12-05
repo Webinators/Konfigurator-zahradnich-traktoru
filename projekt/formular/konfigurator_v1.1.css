@@ -1,0 +1,18 @@
+.bunka1 , .bunka2 ,.bunka4{background-color: rgb(75, 75, 75); border-bottom-right-radius: 10px;border-bottom-left-radius: 10px;
+}
+/*input [type=radio] {color: red;} .zarovnani td {background-color: rgb(75, 75, 75);}*/
+table h3 {background-color: rgb(138,203,8); }
+.bunka1 table td { color: rgb(255,255,255); }
+.bunka2 table td  { color: rgb(255,255,255); }
+.bunka4 table td { color: rgb(255,255,255); }
+
+.zalozka { border-top-right-radius: 40px;border-top-left-radius: 40px; border-top-right-radius: 40px; background-color: rgb(138,203,8);width: 220px;}
+
+.zalozka h3{border-top-left-radius: 10px;  text-align: center; margin: 0px; padding: 0px;width: 200px;border-top-right-radius: 10px;}
+
+.zalozka2 {border-top-right-radius: 20px; background-color: rgb(138,203,8); height: 5px;width: 100%;width: 380px;}
+/*
+input[type=radio]:checked:before,
+input[type=checkbox]:checked:before{
+    background:gold;
+}*/
