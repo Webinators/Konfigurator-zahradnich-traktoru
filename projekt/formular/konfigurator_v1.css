@@ -1,0 +1,13 @@
+.bunka1 , .bunka2 ,.bunka4{background-color: rgb(75, 75, 75);
+}
+/*input [type=radio] {color: red;}*/
+table h3 {background-color: rgb(138,203,8); }
+.bunka1 table td { color: rgb(255,255,255); }
+.bunka2 table td  { color: rgb(255,255,255); }
+.bunka4 table td { color: rgb(255,255,255); }
+.zarovnani td {background-color: rgb(75, 75, 75);}
+/*
+input[type=radio]:checked:before,
+input[type=checkbox]:checked:before{
+    background:gold;
+}*/
