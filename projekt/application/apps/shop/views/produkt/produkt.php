@@ -4,14 +4,14 @@
 
         foreach ($products as $product) {
 
-            $data .= '<tr><td>' . $product["Nazev_p"] . '</td><td><a href="index.php?page=shop/produkt/edit&ID_produkt=' . $product["ID_produkt"] . '" data-target="tr">' . $icons->getIcon("edit") . '</a></td><td><a class="ajaxDel" data-destination="tr" href="' . $this->urlPath . 'load/produkt/remove.php?id=' . $product["ID_produkt"] . '">' . $icons->getIcon("remove") . '</a></td></tr>';
+            $data .= '<tr><td>' . $product["Nazev_p"] . '</td><td><a href="'.$url.'shop/ShopAdmin/editProduct/' . $product["ID_produkt"] . '" data-target="tr">' . $icons->getIcon("edit") . '</a></td><td><a class="ajaxDel" data-destination="tr" href="'.$url.'shop/ShopAdmin/removeProduct/' . $product["ID_produkt"] . '">' . $icons->getIcon("remove") . '</a></td></tr>';
 
         }
 
         $data .= '</table>';
 
         $options = '
-            <a href="index.php?page=shop/produkt/add">' . $icons->getIcon("add", "25px", "Přidat produkt") . '</a>
+            <a href="'.$url.'shop/ShopAdmin/productForm">' . $icons->getIcon("add", "25px", "Přidat produkt") . '</a>
         ';
 
 
