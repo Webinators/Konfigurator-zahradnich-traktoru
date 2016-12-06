@@ -10,7 +10,7 @@ $(document).on("change",".productCategory",function(e){
         event: e,
         bar: true,
         progress: dest,
-        method: "GET"
+        method: "POST"
 
     },function(data){
 

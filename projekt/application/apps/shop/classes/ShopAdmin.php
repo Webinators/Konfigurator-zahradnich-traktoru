@@ -94,6 +94,9 @@ class ShopAdmin
         $this->db->addWherePart("Visible","=","1");
         $this->db->selectFromTable("*", "Kategorie","",$order);
 
+        $view->url = $this->Root->getPathToProject(false, true);
+        $view->packages = $this->Root->getAppPath(__DIR__,false,true);
+
         $view->categories = $this->db->getRows();
         $view->icons = $this->Icons;
 
@@ -107,11 +110,11 @@ class ShopAdmin
         $view = new View($this->Root->getAppPath(__DIR__,true), "kategorie/form");
         $view->title = "Editace kategorie";
 
-        $view->form = Form::getForm("FormTable", $this->urlPath . "shop/ShopAdmin/saveCategory");
+        $view->form = Form::getForm("FormTable", $this->Root->getPathToProject(false, true) . "shop/ShopAdmin/saveCategory");
         $view->formE = new FormElements();
+        $view->data = $data;
 
-        $this->db->addWherePart("ID_kategorie", "=", $data["ID_kategorie"]);
-        $this->db->selectFromTable("*", "Parametr p RIGHT JOIN KategorieParam kp ON p.ID_parametr = kp.ID_parametr","","kp.Order->ASC");
+        $this->db->selectFromTable("Nazev, p.ID_parametr AS ID_parametr, COALESCE(Poradi,0) AS Poradi", "Parametr p LEFT JOIN KategorieParam kp ON p.ID_parametr = kp.ID_parametr","","-kp.Poradi->DESC");
         $view->params = $this->db->getRows();
 
         if(!empty($data)) {
@@ -160,9 +163,9 @@ class ShopAdmin
 
         }
 
-        $this->db->addWherePart("parametr","NOT IN",join(",",$data["parametr"]));
+        $this->db->addWherePart("ID_kategorie","=",$data["ID_kategorie"]);
+        $this->db->addWherePart("AND", "ID_parametr","NOT IN",join(",",$data["parametr"]));
         $this->db->deleteFromTable("KategorieParam");
-
 
         foreach ($data["parametr"] as $param) {
 
@@ -226,7 +229,7 @@ class ShopAdmin
         $view = new View($this->Root->getAppPath(__DIR__,true), "parametr/form");
         $view->title = "Správa parametrů";
 
-        $view->form = Form::getForm("FormTable", $this->Root->getPathToProject(false, true) . "shop/ShopAdmin/load/parametr/saveParametr");
+        $view->form = Form::getForm("FormTable", $this->Root->getPathToProject(false, true) . "shop/ShopAdmin/saveParametr");
         $view->formE = new FormElements();
         $view->data = $data;
 
@@ -243,7 +246,7 @@ class ShopAdmin
             $view->params = array();
         }
 
-        return $view->display("main");
+        return $view->display();
 
     }
 
@@ -361,58 +364,41 @@ class ShopAdmin
         $this->db->selectFromTable("*", "Produkt", "", $order);
         $view->products = $this->db->getRows();
 
+        $view->url = $this->Root->getPathToProject(false, true);
+
         return $view->display("main");
     }
 
     public function productForm($data = array())
     {
 
-        $form = Form::getForm("FormTable", $this->urlPath . "load/produkt/save.php");
-        //$form->Enctype("multipart/form-data");
+        $view = new View($this->Root->getAppPath(__DIR__,true),"produkt/form");
 
-        $form->addHiddenItem($this->formE->Input()->Hidden("ID_produkt")->Value($data["ID_produkt"]));
-        $form->addHiddenItem($this->formE->Input()->Hidden("Old_kategorie")->Value($data["Kategorie"]));
+        $view->form = Form::getForm("FormTable", $this->urlPath . "shop/ShopAdmin/saveProduct");
+        $view->formE = $this->formE;
 
-        $form->addItem("<b>Název produktu</b>", $this->formE->Input()->Text("Nazev_p")->Value($data["Nazev_p"]));
-        $form->addItem("<b>Výrobce</b>", $this->formE->Input()->Text("Vyrobce")->Value($data["Vyrobce"]));
+        if ($data["ID_produkt"] != '') {
+            $gallery = new MiniGallery($this->Root->getAppPath(__DIR__, true) . "images/" . $data["ID_produkt"] . "");
+        } else {
+            $gallery = new MiniGallery("");
+        }
+
+        $gallery->uploadParams(20,"3Mb",FileUploader::IMAGES);
+        $gallery->thumbResize("700,500");
+
+        $view->gallery = $gallery;
+        $view->data = $data;
+
+        $view->params = $this->renderProductParams($data);
 
         $this->db->addWherePart("Visible","=","1");
         $this->db->selectFromTable("ID_kategorie, Nazev_k", "Kategorie");
-        $this->formE->setDataFromDb($this->db->getRows(), "ID_kategorie", "Nazev_k");
-        $form->addItem("<b>Kategorie</b>", $this->formE->Select("ID_kategorie", $data["Kategorie"], array(true, "vyberte kategorii"), true, 'class="productCategory" data-url="' . $this->urlPath . 'load/produkt/getParameters.php"'));
+        $view->kategorie = $this->db->getRows();
 
-        $this->formE->clearData();
+        $view->url = $this->Root->getPathToProject(false, true);
+        $view->packages = $this->Root->getAppPath(__DIR__,false,true);
 
-        $form->addItem("<b>Cena</b>", $this->formE->Input()->Text("Cena")->Value($data["Cena"]));
-        $form->addItem("<b>K ceně</b>", $this->formE->Input()->Text("K_cene")->Value($data["K_cene"]));
-
-        $form->addItem("<b>Popis</b>", $this->formE->TextAreaEditor("Popis",$data["Popis"]));
-
-        $form->addItem("", "");
-        $form->addItem("", '<label><b>Parametry produktu</b></label><br /><br /><div id="productCategoryDest" style="position: relative;">' . $this->renderProductParams($data) . '</div>');
-
-        if (!empty($data)) {
-            $form->addButton($this->formE->Button()->Submit("save", "Uložit produkt"));
-        }
-
-        $minig = null;
-
-        if ($data["ID_produkt"] != '') {
-            $minig = new MiniGallery($this->Root->getAppPath(__DIR__, true) . "images/" . $data["ID_produkt"] . "");
-            $minig->thumbResize("700,500")->allowedExtensions("jpg,png,gif,jpeg");
-        } else {
-            $minig = new MiniGallery("");
-            $minig->thumbResize("700,500")->allowedExtensions("jpg,png,gif,jpeg");
-        }
-
-        if (empty($data)) {
-            $form->addItem("", $minig);
-            $form->addButton($this->formE->Button()->Submit("add", "Přidat produkt"));
-            $minig = "";
-        }
-
-
-        return $form . $minig;
+        return $view->display("main");
     }
 
     public function getParameterValue($prodID, $paramID)
@@ -435,10 +421,11 @@ class ShopAdmin
         }
     }
 
-    public function renderProductParams($data)
+    public function renderProductParams()
     {
 
         $output = "";
+        $data = $_POST;
 
         if ($data["Kategorie"] != '') {
 
