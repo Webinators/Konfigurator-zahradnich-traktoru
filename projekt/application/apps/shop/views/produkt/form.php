@@ -9,7 +9,7 @@ echo '<script type="text/javascript" src="' . $packages . 'js/parameters.js"></s
         $form->addItem("<b>Výrobce</b>", $formE->Input()->Text("Vyrobce")->Value($data["Vyrobce"]));
 
         $formE->setDataFromDb($kategorie, "ID_kategorie", "Nazev_k");
-        $form->addItem("<b>Kategorie</b>", $formE->Select("ID_kategorie", $data["Kategorie"], array(true, "vyberte kategorii"), true, 'class="productCategory" data-url="' . $url . 'shop/ShopAdmin/renderProductParams"'));
+        $form->addItem("<b>Kategorie</b>", $formE->Select("ID_kategorie", $data["Kategorie"], array(true, "vyberte kategorii"), true, 'class="productCategory" data-url="' . $url . 'shop/ShopAdmin/loadParams"'));
 
         $formE->clearData();
 
@@ -31,6 +31,6 @@ echo '<script type="text/javascript" src="' . $packages . 'js/parameters.js"></s
             $minig = "";
         }
 
-	echo $form . $minig;
+	echo $form . $gallery;
 
 ?>

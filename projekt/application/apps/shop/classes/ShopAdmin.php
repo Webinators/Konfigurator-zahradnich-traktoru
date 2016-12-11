@@ -18,6 +18,8 @@ class ShopAdmin
     private $relPath;
     private $urlPath;
 
+    private $permissions = array("Správa eshop" => array("Správa parametrů" => array("Přidat parametr","Změnit parametr","Smazat parametr"), "Správa kategorií" => array("Přidat kategorii","Změnit kategorii","Smazat kategorii"),"Správa produktů" => array("Přidat produkt","Změnit produkt","Smazat produkt")));
+
     function __construct()
     {
 
@@ -30,6 +32,8 @@ class ShopAdmin
         $this->urlPath = $this->Root->getAppPath(__DIR__, false, true);
 
         $this->formE = new FormElements();
+
+        $this->Permissions->addByArr($this->permissions);
 
     }
 
@@ -114,7 +118,7 @@ class ShopAdmin
         $view->formE = new FormElements();
         $view->data = $data;
 
-        $this->db->selectFromTable("Nazev, p.ID_parametr AS ID_parametr, COALESCE(Poradi,0) AS Poradi", "Parametr p LEFT JOIN KategorieParam kp ON p.ID_parametr = kp.ID_parametr","","-kp.Poradi->DESC");
+        $this->db->selectFromTable("Nazev, p.ID_parametr AS ID_parametr, COALESCE(Poradi,0) AS Poradi", "Parametr p LEFT JOIN KategorieParam kp ON p.ID_parametr = kp.ID_parametr","","kp.Poradi->ASC");
         $view->params = $this->db->getRows();
 
         if(!empty($data)) {
@@ -167,16 +171,21 @@ class ShopAdmin
         $this->db->addWherePart("AND", "ID_parametr","NOT IN",join(",",$data["parametr"]));
         $this->db->deleteFromTable("KategorieParam");
 
-        foreach ($data["parametr"] as $param) {
+        for($i = 0 ; $i < count($data["parametr"]);$i++){
 
             $this->db->addWherePart("ID_kategorie","=",$data["ID_kategorie"]);
-            $this->db->addWherePart("AND","ID_parametr","=",$param);
+            $this->db->addWherePart("AND","ID_parametr","=",$data["parametr"][$i]);
             $this->db->selectFromTable("COUNT(*) AS pocet","KategorieParam");
             $count = $this->db->getRows();
 
             if($count[0]["pocet"] == 0){
-                $this->db->insertIntoTable("ID_kategorie,ID_parametr", "KategorieParam", array($data["ID_kategorie"], $param));
+                $this->db->insertIntoTable("ID_kategorie,ID_parametr,Poradi", "KategorieParam", array($data["ID_kategorie"], $data["parametr"][$i],$data["order"][$i]));
+            } else {
+                $this->db->addWherePart("ID_kategorie","=",$data["ID_kategorie"]);
+                $this->db->addWherePart("AND","ID_parametr","=",$data["parametr"][$i]);
+                $this->db->updateTable("KategorieParam","Poradi",array($data["order"][$i]));
             }
+
         }
 
         Redirector::redirect('' . $this->Root->getPathToProject(false, true) . 'shop/ShopAdmin/CategoryList');
@@ -374,7 +383,7 @@ class ShopAdmin
 
         $view = new View($this->Root->getAppPath(__DIR__,true),"produkt/form");
 
-        $view->form = Form::getForm("FormTable", $this->urlPath . "shop/ShopAdmin/saveProduct");
+        $view->form = Form::getForm("FormTable", $this->Root->getPathToProject(false,true) . "shop/ShopAdmin/saveProduct");
         $view->formE = $this->formE;
 
         if ($data["ID_produkt"] != '') {
@@ -401,7 +410,7 @@ class ShopAdmin
         return $view->display("main");
     }
 
-    public function getParameterValue($prodID, $paramID)
+    private function getParameterValue($prodID, $paramID)
     {
         $this->db->addWherePart("ID_produkt", "=", $prodID);
         $this->db->addWherePart("AND", "ID_parametr", "=", $paramID);
@@ -421,40 +430,50 @@ class ShopAdmin
         }
     }
 
-    public function renderProductParams()
-    {
+    public function loadParams(){
 
+        return $this->renderProductParams($_POST);
+
+    }
+
+    private function renderProductParams($data)
+    {
         $output = "";
-        $data = $_POST;
 
         if ($data["Kategorie"] != '') {
 
             $this->db->addWherePart("ID_kategorie", "=", $data["Kategorie"]);
-            $this->db->selectFromTable("*", "KategorieParam kp LEFT JOIN Parametr p ON kp.ID_parametr = p.ID_parametr", "", "p.Nazev->ASC");
+            $this->db->selectFromTable("*", "KategorieParam kp LEFT JOIN Parametr p ON kp.ID_parametr = p.ID_parametr", "", "kp.Poradi->ASC");
             $params = $this->db->getRows();
 
             $output .= '<table class="FlexTable" style="width: 100%;">';
 
             if($data["ID_produkt"] != '') {
+
                 for ($i = 0; $i < count($params); $i++) {
 
                     $this->db->addWherePart("ID_produkt", "=", $data["ID_produkt"]);
                     $this->db->addWherePart("AND", "ID_parametr", "=", $params[$i]["ID_parametr"]);
-                    $this->db->selectFromTable("Hodnota", "ProduktParam pp NATURAL JOIN Parametr");
+                    $this->db->selectFromTable("Hodnota, ID_hodnota, Pevne_h", "ProduktParam pp NATURAL JOIN Parametr");
 
                     if ($this->db->countRows() > 0) {
                         $param = $this->db->getRows();
-                        $params[$i]["Hodnota"] = $param[0]["Hodnota"];
+                        if($params[$i]["Pevne_h"] == 0) {
+                            $params[$i]["Hodnota"] = $param[0]["Hodnota"];
+                        } else {
+                            $params[$i]["Hodnota"] = $param[0]["ID_hodnota"];
+                        }
                     } else {
                         $params[$i]["Hodnota"] = "";
                     }
 
                 }
+
             }
 
             foreach($params as $param) {
 
-                $output .= '<tr><td>' . $param["Nazev"] . ' ' . $param["Popisek"] . '</td><td>' . $this->formE->Input()->Hidden("paramsID[]")->Value($param["ID_parametr"]) . '';
+                $output .= '<tr><td>' . $param["Nazev"] . ' ' . $param["Popisek"] . '</td><td>' . $this->formE->Input()->Hidden("paramsID[]")->Value($param["ID_parametr"]) . $this->formE->Input()->Hidden("pevne[]")->Value($param["Pevne_h"]).'';
 
                 if ($param["Pevne_h"] == 1) {
 
@@ -519,7 +538,7 @@ class ShopAdmin
 
     }
 
-    public function saveProduct($data)
+    public function saveProduct()
     {
 
         $data = $_POST;
@@ -559,10 +578,19 @@ class ShopAdmin
                 $this->db->addWherePart("ID_parametr", "=", $data["paramsID"][$i]);
                 $this->db->addWherePart("AND", "ID_produkt", "=", $data["ID_produkt"]);
 
-                $this->db->updateTable("ProduktParam", "Hodnota", array($data["paramsVal"][$i]));
+                if($data["pevne"][$i] == 0){
+                    $this->db->updateTable("ProduktParam", "Hodnota,ID_hodnota", array($data["paramsVal"][$i], NULL));
+                } else {
+                    $this->db->updateTable("ProduktParam", "Hodnota,ID_hodnota", array(NULL, $data["paramsVal"][$i]));
+                }
 
             } else {
-                $this->db->insertIntoTable("ID_produkt, ID_parametr, Hodnota", "ProduktParam", array($data["ID_produkt"], $data["paramsID"][$i], $data["paramsVal"][$i]));
+
+                if($data["pevne"][$i] == 0) {
+                    $this->db->insertIntoTable("ID_produkt, ID_parametr, Hodnota", "ProduktParam", array($data["ID_produkt"], $data["paramsID"][$i], $data["paramsVal"][$i]));
+                } else {
+                    $this->db->insertIntoTable("ID_produkt, ID_parametr, ID_hodnota", "ProduktParam", array($data["ID_produkt"], $data["paramsID"][$i], $data["paramsVal"][$i]));
+                }
             }
 
         }
@@ -570,16 +598,18 @@ class ShopAdmin
         $commander = new FileCommander();
         $commander->setPath($this->Root->getAppPath(__DIR__, true) . "images");
         $commander->addDir($data["ID_produkt"]);
-        $commander->moveToDir($data["ID_produkt"]);
 
-        $mini = new MiniGallery($commander->getActualPath());
-        $mini->thumbResize("700,500,cropp")->allowedExtensions(FileUploader::IMAGES);
-        $mini->uploadFiles();
+        if ($data["ID_produkt"] == '') {
+            $commander->moveToDir($data["ID_produkt"]);
+            $mini = new MiniGallery($commander->getActualPath());
+            $mini->thumbResize("700,500,cropp")->uploadParams(20, "3Mb", FileUploader::IMAGES);
+            $mini->uploadFiles();
+        }
 
         $msg = new Msg();
         $msg->setMsg("Proudkt byl úspěšně uložen", "success");
 
-        Redirector::redirect(''.$this->Root->getPathToProject(false, true).'index.php?page=shop/sprava-produktu');
+        Redirector::redirect(''.$this->Root->getPathToProject(false, true).'shop/ShopAdmin/productList');
 
     }
 
