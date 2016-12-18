@@ -7,7 +7,7 @@ echo '<script type="text/javascript" src="' . $packages . 'js/parameters.js"></s
         $form->addItem("Jednotka parametru", $this->formE->Input()->Text("Jednotka")->Value($data["Jednotka"]));
         $form->addItem("Popisek", $this->formE->Input()->Text("Popisek")->Value($data["Popisek"]));
 
-        $values = array(array("select","radio","cehckbox"), array("selectbox (výběrové pole)", "radio (přepínač)", "checkbox (zatrhávací políčka)"));
+        $values = array(array("select" => "selectbox (výběrové pole)","radio" => "radio (přepínač)","cehckbox" => "checkbox (zatrhávací políčka)"));
         $this->formE->setDataFromArray($values[0],$values[1]);
 
         $paramsData = ''.$this->formE->Input()->CheckBox("Pevne_h")->Checked($data["Pevne_h"])->Value("1")->Rest('data-handler="ProductParamsEnable1"').'

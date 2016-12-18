@@ -1,0 +1,55 @@
+#konfigurator .konfigurator_polozka{
+    display: inline-block;
+    max-width: 48%;
+    min-width: 48%;
+}
+
+#konfigurator .konfigurator_polozka{
+    margin-top: 10px;
+    margin-left: 15px;
+}
+
+#konfigurator .konfigurator_polozka .konfigurator_zalozka .top{
+
+    position: relative; 
+    background-color: rgb(138,203,8);
+    width: 220px;
+    -webkit-transform: skew(20deg);
+    -moz-transform: skew(20deg);
+    -o-transform: skew(20deg);
+    margin-left: -4px;
+
+}
+
+#konfigurator .konfigurator_polozka .konfigurator_zalozka .top h3{
+
+    text-align: center;
+    margin: 0px;
+    padding: 0px;
+    width: 200px;
+    -webkit-transform: skew(-20deg);
+    -moz-transform: skew(-20deg);
+    -o-transform: skew(-20deg);
+    padding-top: 3px;
+
+}
+
+#konfigurator .konfigurator_polozka .konfigurator_zalozka .bottom {
+    background-color: rgb(138,203,8);
+    height: 5px;
+}
+
+#konfigurator .konfigurator_polozka .konfigurator_bunka{
+    background-color: rgb(60, 60, 60);
+    padding: 6px;
+}
+
+table h3 {
+    background-color: rgb(138,203,8); 
+}
+
+#konfigurator .konfigurator_polozka .konfigurator_bunka table td { 
+    color: rgb(255,255,255); 
+    font-weight: bold;
+    padding: 3px 0px;
+}
