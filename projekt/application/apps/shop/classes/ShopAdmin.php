@@ -410,30 +410,8 @@ class ShopAdmin
         return $view->display("main");
     }
 
-    private function getParameterValue($prodID, $paramID)
-    {
-        $this->db->addWherePart("ID_produkt", "=", $prodID);
-        $this->db->addWherePart("AND", "ID_parametr", "=", $paramID);
-        $this->db->selectFromTable("Hodnota", "ProduktParam");
-        $val = $this->db->getRows();
-
-        $this->db->addWherePart("ID_parametr", "=", $paramID);
-        $this->db->addWherePart("AND", "ID_hodnota", "=", $val[0]["Hodnota"]);
-        $this->db->selectFromTable("Hodnota_h", "Parametr NATURAL JOIN ParametrHodnota NATURAL JOIN HodnotyList");
-
-        $data = $this->db->getRows();
-
-        if($this->db->countRows() > 0) {
-            return $data[0]["Hodnota_h"];
-        } else {
-            return "";
-        }
-    }
-
     public function loadParams(){
-
         return $this->renderProductParams($_POST);
-
     }
 
     private function renderProductParams($data)

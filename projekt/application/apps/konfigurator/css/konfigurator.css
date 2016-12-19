@@ -1,12 +1,15 @@
 #konfigurator .konfigurator_polozka{
-    display: inline-block;
     max-width: 48%;
     min-width: 48%;
+    margin-top: 10px;
 }
 
-#konfigurator .konfigurator_polozka{
-    margin-top: 10px;
-    margin-left: 15px;
+#konfigurator .konfigurator_polozka:nth-child(2n){
+    margin-left: 25px;  
+}
+
+#konfigurator .konfigurator_polozka > div{
+   width: 100%;
 }
 
 #konfigurator .konfigurator_polozka .konfigurator_zalozka .top{
@@ -40,6 +43,7 @@
 }
 
 #konfigurator .konfigurator_polozka .konfigurator_bunka{
+    width: 100%;
     background-color: rgb(60, 60, 60);
     padding: 6px;
 }
@@ -52,4 +56,50 @@ table h3 {
     color: rgb(255,255,255); 
     font-weight: bold;
     padding: 3px 0px;
+}
+
+
+
+// styles for specific resolutions
+
+@media (min-width: 1440px) {
+
+}
+
+@media (max-width: 1440px){
+
+
+}
+
+/* Portrait tablet to landscape and desktop */
+
+@media (max-width: 979px) {
+
+	
+
+}
+
+/* Landscape phone to portrait tablet */
+
+@media (max-width: 768px) {
+
+#konfigurator .konfigurator_polozka{
+    max-width: 42%;
+    min-width: 42%;
+    margin-top: 10px;
+}
+
+}
+
+/* Landscape phones and down */
+
+@media (max-width: 580px) {
+
+#konfigurator .konfigurator_polozka{
+    max-width: 100%;
+    min-width: 100%;
+    margin-top: 10px;
+    margin-left: 0px !important;  
+}
+
 }

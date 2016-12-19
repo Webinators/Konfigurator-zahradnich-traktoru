@@ -1,0 +1,199 @@
+#polozky_najite .produkt {
+    max-width: 32%;
+    background-color: #4b4b4b;
+    color: #ffffff;
+    position: relative;
+    text-align: center;
+    margin-left: 10px;
+    margin-top: 10px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+
+}
+
+#polozky_najite .produkt:first-child, #polozky_najite .produkt:nth-child(3n+1){
+    margin-left: 0px;    
+}
+
+.submitt {
+    padding: 10px 8px;
+    border: 0px;
+    font-size: 14px;
+    background-color: #8acb08;
+    border: 1px #000 solid;
+    color: #ffffff;
+}
+
+.submitt:hover {
+    background-color: #2e2e2e;
+}
+
+#vypis_produktu {
+
+    width: 96%;
+    text-align: center;
+    color: #4b4b4b;
+    position: relative;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+#vypis_produktu .filtr {
+
+    border: 1px #000 solid;
+    border-bottom: 0px;
+    background-color: #8acb08;
+    padding: 4px 4px;
+    font-weight: bold;
+    width: 150px;
+    text-align: center;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+#vypis_produktu .options {
+    width: 100%;
+    text-align: left;
+    border: 1px #000 solid;
+    padding: 7px 7px;
+    color: #000000;
+    position: relative;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topright: 5px;
+    border-top-right-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    -moz-border-radius-bottomright: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+#vypis_produktu .options a:link {
+    text-decoration: none;
+    color: #818b93;
+    font-weight: bold;
+}
+
+#vypis_produktu .options a:visited {
+    text-decoration: none;
+    color: #818b93;
+    font-weight: bold;
+}
+
+#vypis_produktu .options a:hover, #vypis_produktu .options a.active{
+    text-decoration: none;
+    color: #00528A;
+    font-weight: bold;
+}
+
+#polozky_najite .produkt .nazev {
+    padding-top: 20px;
+    font-weight: bold;
+}
+
+#polozky_najite .produkt .miniatura {
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    position: relative;
+    margin: 15px auto;
+    padding: 4px 4px;
+    background-color: #ffffff;
+    width: 80%;
+    font-weight: bold;
+    color: #000000;
+    clear: both;
+    top: 10px;
+}
+
+#polozky_najite .produkt .miniatura img {
+    width: 100%;
+}
+
+#polozky_najite .produkt .popis {
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    max-height: 155px;
+    overflow: hidden;
+}
+
+#polozky_najite .produkt .popis, #polozky_najite .produkt .popis p {
+    text-align: justify;
+}
+
+
+// styles for specific resolutions
+
+@media (min-width: 1440px) {
+
+}
+
+@media (max-width: 1440px){
+
+
+}
+
+/* Portrait tablet to landscape and desktop */
+
+@media (max-width: 979px) {
+
+   #polozky_najite .produkt {	
+	max-width: 48%;
+   }
+
+   #polozky_najite .produkt:nth-child(3n+1){
+      margin-left: 10px;    
+   }
+
+   #polozky_najite .produkt:first-child, #polozky_najite .produkt:nth-child(2n+1){
+      margin-left: 0px;
+   }
+
+}
+
+/* Landscape phone to portrait tablet */
+
+@media (max-width: 768px) {
+
+   #polozky_najite .produkt table tr td{
+	display: block;
+	width: 98% !important;
+	padding: 8px 0px;
+   }
+
+   #polozky_najite .produkt table tr td .miniatura img{
+	width: 100% !important;
+   }
+
+   .submitt{
+	margin-top: 28px;
+   }
+
+}
+
+/* Landscape phones and down */
+
+@media (max-width: 580px) {
+
+   #polozky_najite .produkt {
+	
+	margin-left: 5px;
+	display: block;
+	width: 98%;
+	max-width: 98%;
+
+   }
+
+}
+

@@ -1,0 +1,104 @@
+#detail_produkt .pozadi{
+    background-color: rgb(54,54,54);
+    width: 300px;
+    height: 250px;
+    padding-top: 10px;
+    text-align: center;
+}
+
+#detail_produkt .pozadi img{
+    border: 0px;
+}
+
+#detail_produkt table tr td{
+   padding: 2px 5px;
+}
+
+img{
+    border: 2px #ffffff solid;
+    width: 270px;
+}
+
+h5{
+    text-align: center;
+    color: rgb(255,255,255);
+    font: normal small Arial, sans-serif;
+}
+
+.parametry{
+    border-collapse: collapse;
+    text-align: left;
+    width: 95%;
+    padding: 5px;
+}
+
+.info, .popis{ padding: 8px; }
+
+.info{
+    border: 1px solid rgb(0,0,0);
+-webkit-border-bottom-right-radius: 3px;
+-webkit-border-bottom-left-radius: 3px;
+-moz-border-radius-bottomright: 3px;
+-moz-border-radius-bottomleft: 3px;
+border-bottom-right-radius: 3px;
+border-bottom-left-radius: 3px;
+    padding: 10 10 10 20;
+}
+
+#detail_produkt_params{
+    display: none;
+}
+
+#btn_popis, #btn_params{
+   padding: 4px 7px;
+   background-color: #ccc;
+   -webkit-border-radius: 0px;
+   -moz-border-radius: 0px; 
+   border-radius: 0px;
+   font-weight: bold;
+   margin-left: 4px;
+   cursor: pointer;
+}
+
+#btn_popis.active, #btn_params.active{
+   background-color: #72AA02;
+}
+
+// styles for specific resolutions
+
+@media (min-width: 1440px) {
+
+}
+
+@media (max-width: 1440px){
+
+
+}
+
+/* Portrait tablet to landscape and desktop */
+
+@media (max-width: 979px) {
+
+
+
+}
+
+/* Landscape phone to portrait tablet */
+
+@media (max-width: 768px) {
+
+
+}
+
+/* Landscape phones and down */
+
+@media (max-width: 580px) {
+
+   #detail_produkt table tr td{
+       display: block;
+       width: 100% !important;
+   }
+   
+
+}
+

@@ -1,18 +1,90 @@
-<div>
-<div class="nastaveni_nadpis">Parametry</div>
-<div class="nastaveni">
-<b>Cena:</b> 
+<?php echo '
 
-<a href="index.php?page=konfigurator&amp;uprava=sběr do koše, mulčování, zadní výhoz (deflektorem)&amp;trava=vlhká, mokrá&amp;teren=podmáčený&amp;parcela=10&amp;sklon=10&amp;seceni=pravidelné 1* za týden, pravidelné 1* za měsíc, pravidelné 1* za rok&amp;vyrobce=&amp;cena=dolu&amp;najit=ANO&amp;rezim=standart&amp;info=KONFIGURÁTOR TRAKTORY"><img src="pic/dolu.png" alt="Cena dolu" title="cena dolu" border="0"></a>
+<link rel="stylesheet" href="'.$packages.'css/searched.css" type="text/css" media="all" />
 
-<a href="index.php?page=konfigurator&amp;uprava=sběr do koše, mulčování, zadní výhoz (deflektorem)&amp;trava=vlhká, mokrá&amp;teren=podmáčený&amp;parcela=10&amp;sklon=10&amp;seceni=pravidelné 1* za týden, pravidelné 1* za měsíc, pravidelné 1* za rok&amp;vyrobce=&amp;cena=nahoru&amp;najit=ANO&amp;rezim=standart&amp;info=KONFIGURÁTOR TRAKTORY"><img src="pic/nahoru.png" alt="Cena nahoru" title="cena nahoru" border="0"></a><br>
+<div id="vypis_produktu">
+<div class="filtr">Parametry</div>
+<div class="options">
+    <b>Cena:</b>
 
-<b>Výrobce:</b> <a href="index.php?page=konfigurator&amp;uprava=sběr do koše, mulčování, zadní výhoz (deflektorem)&amp;trava=vlhká, mokrá&amp;teren=podmáčený&amp;parcela=10&amp;sklon=10&amp;seceni=pravidelné 1* za týden, pravidelné 1* za měsíc, pravidelné 1* za rok&amp;vyrobce=Seco Group&amp;cena=&amp;rezim=standart&amp;najit=ANO&amp;info=KONFIGURÁTOR TRAKTORY">Seco Group</a> - 
-<span style="color: #00528a;text-decoration: underline;font-weight: bold;">Všechny</span>
+    <a href="'.$url.'konfigurator/konfigurator/search/DESC/'.urlencode($avyrobce).'"><img src="'.$packages.'icons/'.(($acena == "DESC") ? "dolu1" : "dolu").'.png" alt="Cena dolu" title="cena dolu" border="0"></a>
 
+    <a href="'.$url.'konfigurator/konfigurator/search/ASC/'.urlencode($avyrobce).'"><img src="'.$packages.'icons/'.(($acena == "ASC") ? "nahoru1" : "nahoru").'.png" alt="Cena nahoru" title="cena nahoru" border="0"></a><br>
+
+    <b>Výrobce:</b>
+    ';
+
+foreach($vyrobci as $vyrobce){
+    echo '<a class="'.(($avyrobce == $vyrobce["Vyrobce"]) ? "active" : "").'" href="'.$url.'konfigurator/konfigurator/search/'.$acena.'/'.urlencode($vyrobce["Vyrobce"]).'">'.$vyrobce["Vyrobce"].'</a> - ';
+}
+
+echo '<a class="'.(($avyrobce == "vse") ? "active" : "").'" href="'.$url.'konfigurator/konfigurator/search/'.$acena.'/vse">vše</a>
+
+    <br>
+    <!--<b>Režim:</b>
+    <a href="'.$url.'konfigurator/konfigurator/search/'.$acena.'/'.$avyrobce.'/compare">Porovnávací</a>
+    <span style="'.$url.'konfigurator/konfigurator/search/'.$acena.'/'.$avyrobce.'/standart">Standart</span>-->
+
+</div>
+</div>
 <br>
-<b>Režim:</b>
-<a href="index.php?page=konfigurator&amp;uprava=sběr do koše, mulčování, zadní výhoz (deflektorem)&amp;trava=vlhká, mokrá&amp;teren=podmáčený&amp;parcela=10&amp;sklon=10&amp;seceni=pravidelné 1* za týden, pravidelné 1* za měsíc, pravidelné 1* za rok&amp;cena=&amp;vyrobce=&amp;rezim=porovnavaci&amp;najit2=ANO&amp;info=KONFIGURÁTOR TRAKTORY">Porovnávací</a> 
-<span style="color: #00528a;text-decoration: underline;font-weight: bold;">Standart</span>
+
+<div id="polozky_najite" class="flexElem flexWrap">
+';
+
+$cmd = new FileCommander();
+$editor = new ImgEdit();
+
+foreach($products as $product) {
+
+    $path = $project."apps/shop/images/".$product["ID_produkt"]."";
+    $cmd->setPath($path);
+
+    if($cmd->dirExists("thumbs")){
+        $cmd->moveToDir("thumbs");
+    }
+
+    $editor->setInputDir($cmd->getActualPath());
+
+    $thumbs = $cmd->getFiles();
+
+    echo '
+            <div class="produkt flex flexElem"><div>
+                <div class="nazev">
+                    '.$product["Vyrobce"].' - '.$product["Nazev_p"].'
+                </div>
+                <br>
+                <table style="color: #ffffff;">
+                    <tbody>
+                    <tr valign="middle">
+                        <td rowspan="5" style="width: 170px;">
+                            <div class="miniatura"><a href="">'.$editor->getIMGInHTML($thumbs[0])->width("120px")->alt("")->title("").'</a></div></td>
+                    </tr>
+                    <tr>
+                        <td> Cena: <font color="#8acb08"><b>'.$product["Cena"].'</b></font> Kč</td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <a href="'.$url.'konfigurator/konfigurator/detail/'.$product["ID_produkt"].'" class="submitt" style="text-decoration: none;">Zobrazit&nbsp;více</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+
+                <div class="popis">
+                    '.$product["Popis"].'
+                </div>
+            </div></div>
+    ';
+
+}
+
+echo '
 </div>
-</div>
+';
+
+echo '<div class="flexElem alignElemsRight" style="width: 100%;">'.$pager.'</div>';
+
+?>

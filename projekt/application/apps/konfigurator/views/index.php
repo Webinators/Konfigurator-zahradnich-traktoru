@@ -1,12 +1,12 @@
 <?php
 echo '
 <link rel="stylesheet" href="'.$packages.'css/konfigurator.css" type="text/css" media="all" />
-';
-?>
-<div id="konfigurator" class="flexElem">
-    <form method="POST" action="<?php echo $url; ?>konfigurator/konfigurator/search">
+<div id="konfigurator">
+    <form method="POST" action="'.$url.'konfigurator/konfigurator/search">
 
-        <?php
+<div class="flexElem flexWrap alignElemsCenter">
+';
+
         $last = "";
 
         $i = count($params);
@@ -16,11 +16,11 @@ echo '
             if($last != $param["Nazev"]){
 
                 if($last != ''){
-                    echo '</table></div></div>';
+                    echo '</table></div></div></div>';
                 }
 
                 echo '
-                    <div class="konfigurator_polozka flexElem flex">
+                    <div class="konfigurator_polozka flex flexElem"><div>
 
                     <div class="konfigurator_zalozka">
                         <div class="top" style=""><h3>'.$param["Nazev"].'</h3>
@@ -41,7 +41,7 @@ echo '
             $i--;
 
             if($i == 0){
-                echo '</table></div></div>';
+                echo '</table></div></div></div>';
             }
 
         }
@@ -50,7 +50,7 @@ echo '
         ?>
 
 
-        <div class="konfigurator_polozka">
+        <div class="konfigurator_polozka flex flexElem"><div>
 
             <div class="konfigurator_zalozka">
                 <div class="top" style=""><h3>Parcela</h3>
@@ -84,9 +84,9 @@ echo '
 
             </div>
 
-        </div>
+        </div></div>
 
-        <div class="konfigurator_polozka">
+        <div class="konfigurator_polozka flex flexElem"><div>
 
             <div class="konfigurator_zalozka">
                 <div class="top" style=""><h3>Sklon</h3>
@@ -113,9 +113,10 @@ echo '
                 </table>
             </div>
 
-        </div>
+        </div></div>
 
-        <br style="clear: both">
+</div>
+
         <br />
         Je nutno dodržovat svahovou dostupnost uvedenou v návodu k obsluze stroje. Zde uvádíme svahovou dostupnost motoru a převodovky z hlediska životnosti.
 

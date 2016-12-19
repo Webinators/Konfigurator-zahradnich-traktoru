@@ -1,20 +1,124 @@
 
 body, html{
-	margin: 0px;
-	padding: 0px;
+    margin: 0px;
+    padding: 0px;
 }
 
 body{
 
-
-	padding-top: 35px;
-	background-color: #fff;
+    background-color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
 
 }
 
 a:link, a:visited, a:active, a:hover{
 
-	text-decoration: none;
-	color: #000 !important;
+    text-decoration: none;
+    color: #000;
 
+}
+
+header, main, footer{
+    margin: 0px auto;
+    width: 100%;
+    max-width: 900px;
+    padding: 0px 7px;
+}
+
+/* Head*/
+
+#headerContainer{
+    background-color: #72AA02;
+    border-bottom: 1px #3C3C3C solid;
+}
+
+header{
+    min-height: 100px;
+    color: #000;
+    text-align: center;
+    line-height: 100px;
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+/* Content */
+
+main{
+    min-height: 700px;
+    padding: 0px;
+}
+
+main #content{
+    padding: 0px 7px;
+}
+
+ul#menu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #3C3C3C;
+}
+ul#menu a:hover{
+    background-color: #595959;
+}
+ul#menu li {
+    float: left;
+}
+
+ul#menu li a, ul#menu li a:link, ul#menu li a:visited, ul#menu li a:active, ul#menu li a:hover{
+    font-weight: bold;
+    color: #fff;
+    background-color: transparent;
+}
+
+ul#menu li a, .dropbtn {
+    display: inline-block;
+    color: #8cff1a;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+ul#menu li a:hover, .dropdown:hover .dropbtn {
+    color: #8cff1a;
+}
+ul#menu li.dropdown {
+    display: inline-block;
+}
+ul#menu li.dropdown .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #3C3C3C;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 9999;
+}
+ul#menu li.dropdown .dropdown-content a:link, ul#menu li.dropdown .dropdown-content a:visited, ul#menu li.dropdown .dropdown-content a:active{
+    color: #fff;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+ul#menu li.dropdown .dropdown-content a:hover {
+    color: #262626;
+    background-color: #8cff1a !important;
+}
+ul#menu li.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Footer */
+
+#footerContainer{
+    margin-top: 10px;
+    background-color: #2e2e2e;
+}
+
+footer{
+    min-height: 150px;
+    color: #fff;
+    line-height: 150px;
+    text-align: center;
+    font-weight: bold;
 }

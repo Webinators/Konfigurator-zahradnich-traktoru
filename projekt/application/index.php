@@ -5,6 +5,12 @@ require_once('core/config.php');
 
 $URL = $_GET["url"];
 
+// zapamatování si předchozí URL pro tlačítka zpět
+
+if($_POST["ajax"] != "true" && $_GET["ajax"] != "true"){
+   Redirector::remember($URL);
+}
+
 if($URL == ""){
 
     $view = new View(ROOT.PROJECT,"home");
@@ -39,7 +45,8 @@ if($URL == ""){
     
                 } else {
     
-                    echo "PAGE NOT FOUND";
+    			$view = new View(ROOT.PROJECT,"notfound");
+    			echo $view->display("main");
     
                 }
     
@@ -48,8 +55,9 @@ if($URL == ""){
             }
     
         } else {
-    
-            echo "PAGE NOT FOUND";
+
+    		$view = new View(ROOT.PROJECT,"notfound");
+    		echo $view->display("main");
             
         }
     

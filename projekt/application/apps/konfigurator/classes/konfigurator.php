@@ -35,6 +35,10 @@ class konfigurator
     public function index()
     {
 
+        if($this->Sessions->sessionExists("konfigurator-products")){
+            $this->Sessions->removeSession("konfigurator-products");
+        }
+
         $view = new View($this->Root->getAppPath(__DIR__,true), "index");
         $view->title = "Konfigurátor";
 
@@ -61,7 +65,7 @@ class konfigurator
         $poradi = $db->getRows();
 
         $db->addWherePart("ID_parametr","=",$par);
-        $db->addWherePart("AND","Poradi",">",$poradi[0]["Poradi"]);
+        $db->addWherePart("AND","Poradi",">=",$poradi[0]["Poradi"]);
         $db->selectFromTable("ID_hodnota","ParametrHodnota");
 
         $data = $db->getRows();
@@ -75,99 +79,206 @@ class konfigurator
         return $arr;
     }
 
-    public function search($order = "Cena->ASC"){
+    public function search($cena = "ASC", $vyrobce = "vse", $typ = "standart"){
 
-        $view = new View($this->Root->getAppPath(__DIR__,true), "index");
+        $view = new View($this->Root->getAppPath(__DIR__,true), "filter");
         $view->title = "Nalezené traktory";
 
-        $view->url = $this->Root->getPathToProject(false, true);
-        $view->packages = $this->Root->getAppPath(__DIR__,false,true);        
-        
-        $data = $_POST;
-        $results = array();
-
-        // Pevne hodnoty
-
-        for($i = 0; $i < count($data["parametr"]["id"]); $i++){
-
-            $results[$i] = array();
-
-            $this->db->addWherePart("ID_parametr","=",$data["parametr"]["id"][$i],array(true,false));
-            $this->db->addWherePart("AND","ID_hodnota","IN",join(",",$this->getIDToSearch($data["parametr"]["id"][$i],$data["parametr"]["hodnota"][$data["parametr"]["id"][$i]])),array(false,true));
-
-            $this->db->selectFromTable("ID_produkt","ProduktParam","","ID_produkt->ASC");
-            $products = $this->db->getRows();
-
-            foreach ($products as $product){
-                array_push($results[$i],$product["ID_produkt"]);
+        if($this->Sessions->sessionExists("konfigurator-cena")){
+            if($this->Sessions->getSession("konfigurator-cena") != $cena){
+                $this->Sessions->changeSession("konfigurator-cena",$cena);
             }
-
-        }
-
-        $i = count($results);
-
-        //Parcela
-
-        $results[$i] = array();
-
-        $this->db->addWherePart("ID_parametr","=",42,array(true,false));
-        if($data["parcela"] < 61){
-            $this->db->addWherePart("AND","Hodnota","<=",$data["parcela"],array(false,true));
+            $view->acena = $this->Sessions->getSession("konfigurator-cena");
         } else {
-            $this->db->addWherePart("AND","Hodnota",">=",$data["parcela"],array(false,true));
+            $view->acena = $cena;
+            $this->Sessions->createSession("konfigurator-cena",$cena);
         }
 
-        $this->db->selectFromTable("ID_produkt","ProduktParam","","ID_produkt->ASC");
-        $products = $this->db->getRows();
-
-        foreach ($products as $product){
-            array_push($results[$i],$product["ID_produkt"]);
-        }
-
-        $i++;
-
-        // Sklon
-
-        $results[$i] = array();
-
-        $this->db->addWherePart("ID_parametr","=",13,array(true,false));
-        if($data["sklon"] < 16){
-            $this->db->addWherePart("AND","Hodnota","<=",$data["sklon"],array(false,true));
+        if($this->Sessions->sessionExists("konfigurator-vyrobce")){
+            if($this->Sessions->getSession("konfigurator-vyrobce") != $vyrobce){
+                $this->Sessions->changeSession("konfigurator-vyrobce",$vyrobce);
+            }
+            $view->avyrobce = $this->Sessions->getSession("konfigurator-vyrobce");
         } else {
-            $this->db->addWherePart("AND","Hodnota",">=",$data["sklon"],array(false,true));
+            $view->avyrobce = $vyrobce;
+            $this->Sessions->createSession("konfigurator-vyrobce",$vyrobce);
         }
 
-        $this->db->selectFromTable("ID_produkt","ProduktParam","","ID_produkt->ASC");
-        $products = $this->db->getRows();
+        //$view->typ = $typ;
 
-        print_r($products);
+        $view->url = $this->Root->getPathToProject(false, true);
+        $view->packages = $this->Root->getAppPath(__DIR__,false,true);
+        $view->project = $this->Root->getPathToProject(true);
 
-        foreach ($products as $product){
-            array_push($results[$i],$product["ID_produkt"]);
-        }
+        if(!$this->Sessions->sessionExists("konfigurator-products")) {
 
-        // Vyfiltrovani
+            $results = array();
+            $data = $_POST;
 
-        for ($j = 0; $j < count($results[0]); $j++){
+            // Pevne hodnoty
 
-            for($i = 1; $i < count($results); $i++){
+            for ($i = 0; $i < count($data["parametr"]["id"]); $i++) {
 
-                if(!in_array($results[0][$j],$results[$i])){
-                    unset($results[0][$j]);
-                    continue;
+                $results[$i] = array();
+
+                $this->db->addWherePart("ID_parametr", "=", $data["parametr"]["id"][$i], array(true, false));
+                $this->db->addWherePart("AND", "ID_hodnota", "IN", join(",", $this->getIDToSearch($data["parametr"]["id"][$i], $data["parametr"]["hodnota"][$data["parametr"]["id"][$i]])), array(false, true));
+
+                $this->db->selectFromTable("ID_produkt", "ProduktParam", "", "ID_produkt->ASC");
+                $products = $this->db->getRows();
+
+                foreach ($products as $product) {
+                    array_push($results[$i], $product["ID_produkt"]);
                 }
 
             }
 
+            $i = count($results);
+
+            //Parcela
+
+            $results[$i] = array();
+
+            $this->db->addWherePart("ID_parametr", "=", 42, array(true, false));
+            if ($data["parcela"] < 61) {
+                $this->db->addWherePart("AND", "Hodnota", "<=", $data["parcela"], array(false, true));
+            } else {
+                $this->db->addWherePart("AND", "Hodnota", ">=", $data["parcela"], array(false, true));
+            }
+
+            $this->db->selectFromTable("ID_produkt", "ProduktParam", "", "ID_produkt->ASC");
+            $products = $this->db->getRows();
+
+            foreach ($products as $product) {
+                array_push($results[$i], $product["ID_produkt"]);
+            }
+
+            $i++;
+
+            // Sklon
+
+            $results[$i] = array();
+
+            $this->db->addWherePart("ID_parametr", "=", 13, array(true, false));
+            if ($data["sklon"] < 16) {
+                $this->db->addWherePart("AND", "Hodnota", "<=", $data["sklon"], array(false, true));
+            } else {
+                $this->db->addWherePart("AND", "Hodnota", ">=", $data["sklon"], array(false, true));
+            }
+
+            $this->db->selectFromTable("ID_produkt", "ProduktParam", "", "ID_produkt->ASC");
+            $products = $this->db->getRows();
+
+            foreach ($products as $product) {
+                array_push($results[$i], $product["ID_produkt"]);
+            }
+
+            // Vyfiltrovani
+
+            for ($j = 0; $j < count($results[0]); $j++) {
+
+                for ($i = 1; $i < count($results); $i++) {
+
+                    if (!in_array($results[0][$j], $results[$i])) {
+                        unset($results[0][$j]);
+                        continue;
+                    }
+
+                }
+
+            }
+
+            $this->Sessions->createSession("konfigurator-products",json_encode($results[0]));
+            $result = join(",",$results[0]);
+
+        } else {
+            $data = json_decode($this->Sessions->getSession("konfigurator-products"), true);
+            $result = join(",",$data);
         }
 
-        $this->db->addWherePart("ID_produkt","IN",join(",",$results[0]));
-        $this->db->selectFromTable("*","Produkt","",$order);
+        // select traktoru
+        $this->db->addWherePart("ID_produkt","IN", $result);
 
+        if($vyrobce != "vse"){
+            $this->db->addWherePart("AND","Vyrobce","LIKE",$vyrobce);
+        }
+
+        if($_GET["products"] != ''){
+            $range = explode("-",$_GET["products"]);
+            $limit = $range[0].",".$range[1];
+        } else {
+            if($_GET["strankovani"] != ''){
+                $limit = $_GET["strankovani"];
+            } else {
+                $limit = 12;
+            }
+        }
+
+        $this->db->selectFromTable("*","Produkt","","Cena->".$cena."",$limit);
         $view->products = $this->db->getRows();
 
+        // select vyrobcu
+        $this->db->addWherePart("ID_produkt","IN",$result);
+        $this->db->selectFromTable("DISTINCT(Vyrobce)","Produkt");
+        $view->vyrobci = $this->db->getRows();
+
+        // zjisteni poctu traktoru
+
+        $this->db->addWherePart("ID_produkt","IN", $result);
+
+        if($vyrobce != "vse"){
+            $this->db->addWherePart("AND","Vyrobce","LIKE",$vyrobce);
+        }
+
+        $this->db->selectFromTable("COUNT(*) AS pocet","Produkt");
+        $count = $this->db->getRows();
+
+        $view->pager = $this->formE->dataPager($count[0]["pocet"], 12, array(12=>12,36=>36,76=>76,152=>152));
+
         return $view->display("main");
-        
+
+    }
+
+    public function detail($id){
+
+        $view = new View($this->Root->getAppPath(__DIR__,true), "detail");
+
+        $view->url = $this->Root->getPathToProject(false, true);
+        $view->packages = $this->Root->getAppPath(__DIR__,false,true);
+        $view->project = $this->Root->getPathToProject(true);
+
+        $this->db->addWherePart("ID_produkt","=",$id);
+        $this->db->selectFromTable("*", "Produkt");
+        $data = $this->db->getRows();
+        $data = $data[0];
+
+        $view->title = "Detail produktu";
+
+        $this->db->addWherePart("ID_kategorie","=",$data["Kategorie"]);
+        $this->db->addWherePart("AND","ID_produkt","=",$id);
+        $this->db->selectFromTable("p.Nazev as Nazev, ID_hodnota, Hodnota","KategorieParam kp JOIN Parametr p ON kp.ID_parametr = p.ID_parametr LEFT JOIN ProduktParam pp ON p.ID_parametr = pp.ID_parametr","","Poradi->ASC");
+        $params = $this->db->getRows();
+
+        $i = 0;
+        foreach ($params as $param) {
+
+            if($param["ID_hodnota"] != NULL){
+
+                $this->db->addWherePart("ID_hodnota", "=", $param["ID_hodnota"]);
+                $this->db->selectFromTable("Hodnota_h", "HodnotyList");
+                $paramVals = $this->db->getRows();
+
+                $params[$i]["Hodnota"] = $paramVals[0]["Hodnota_h"];
+
+            }
+            $i++;
+        }
+
+        $data["params"] = $params;
+
+        $view->data = $data;
+
+        return $view->display("main");
     }
 
 }

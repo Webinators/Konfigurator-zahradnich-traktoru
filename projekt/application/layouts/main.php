@@ -10,22 +10,23 @@ $projUrl = $tree->getPathToProject(false,true);
 <head>
 
     <meta http-equiv="Content-type" content="application/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
 
     <link rel="stylesheet" href="<?php echo $projUrl; ?>apps/fotogalerie/css/lightbox.min.css" type="text/css" media="all" />
     <link rel="stylesheet" href="<?php echo $projUrl; ?>css/styly.css" type="text/css" media="all" />
 
     <title>Konfigurator app</title>
 
-<?php
+    <?php
 
-$tree = new TreeDirectory();
-$url = $tree->getPathToRegistratura(false,true);
+    $tree = new TreeDirectory();
+    $url = $tree->getPathToRegistratura(false,true);
 
-$realDir = $url;
+    $realDir = $url;
 
-$icons = new Icons();
+    $icons = new Icons();
 
-echo'
+    echo'
 <script type="text/javascript">
 var mainVariables = {
   homepath: "'.$tree->getPathToProject(false,true).'",
@@ -35,7 +36,6 @@ var mainVariables = {
 </script>
 
 <script type="text/javascript" src="'.$realDir.'js/plugins/jquery_min.js"></script>
-<script type="text/javascript" src="'.$realDir.'js/plugins/jquery.mobile.min.js"></script>
 
 
 <script src="'.$realDir.'js/plugins/ResizeSensor.js"></script>
@@ -71,7 +71,7 @@ var mainVariables = {
 
 <script type="text/javascript">
 
-  function niceSelect(el){console.log(el);
+  function niceSelect(el){
     el.niceSelect();
   }
 
@@ -101,35 +101,80 @@ var mainVariables = {
     checkbox: checkbox,
     type: "select"
     });
-    
+
   }
+
+  $(document).ready(function(){
+
+    $(".icheck").each(function(){
+        iCheck($(this));
+    });
+
+  });
 
 </script>
 
 <script src="'.$realDir.'apps/imageseditor/js/changeIMG.js" type="text/javascript"></script>
 
 ';
-?>
+    ?>
 
 
 </head>
 
 <body>
 
-<div style="margin: 0px auto;width: 900px;">
+<div id="headerContainer">
+    <header>
 
-<?php
-require(CORE."Uzivatele.php");
+        Konfigurátor v. 1.0.0
 
-echo $view;
-?>
-
-
-<script type="text/javascript" src="<?php echo $projUrl; ?>apps/fotogalerie/js/lightbox.min.js"></script>
-
+    </header>
 </div>
 
-<div style="position: absolute;bottom: -20px;"><endora /></div>
+<div id="pageContainer">
+    <main>
+        <?php
+        echo '
+        <ul id="menu">
+          <li>
+            <a href="'.URL.'">Home</a>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropbtn">Správa konfigurátoru</a>
+            <div class="dropdown-content">
+              <a href="'.URL.'shop/ShopAdmin/parametrList">Správa parametrů</a>
+              <a href="'.URL.'shop/ShopAdmin/CategoryList">Správa kategorií</a>
+              <a href="'.URL.'shop/ShopAdmin/productList">Správa produktů</a>
+            </div>
+          </li>
+          <li>
+            <a href="'.URL.'konfigurator/konfigurator/index">Konfigurátor</a>
+          </li>
+
+        </ul>
+        ';
+        ?>
+
+        <?php
+        require(CORE."Uzivatele.php");
+
+        $formE = new FormElements();
+        echo '<div id="content">
+	       <p><h1 style="display: inline-block;">'.(($title != '') ? $title : "Úvodní stránka").'</h1>&nbsp;'.$formE->Button()->Link("",Redirector::getLastUrl(),"Zpět")->ContainerStyle("float: right;").'</p>
+              '.$view.'</div>
+        ';
+        ?>
+    </main>
+</div>
+
+<div id="footerContainer">
+    <footer>
+        Konfigurator v 1.0.0 &copy; 2016
+    </footer>
+</div>
+
+<div style="position: fixed;bottom: 0px;left: 0px;"><endora /></div>
 
 </body>
 </html>
