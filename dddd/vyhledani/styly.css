@@ -1,0 +1,136 @@
+#polozky_najite .produkt {
+    width: 48%;
+    float: left;
+    background-color: #4b4b4b;
+    color: #ffffff;
+    position: relative;
+    text-align: center;
+    min-height: 400px;
+    margin-left: 10px;
+    margin-top: 10px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+
+}
+
+.submitt {
+    padding: 10px 20px;
+    border: 0px;
+    font-size: 14px;
+    background-color: #8acb08;
+    border: 1px #000 solid;
+    color: #ffffff;
+}
+
+.submitt:hover {
+    background-color: #2e2e2e;
+}
+
+#vypis_produktu {
+
+    width: 96%;
+    text-align: center;
+    color: #4b4b4b;
+    position: relative;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+#vypis_produktu .filtr {
+
+    border: 1px #000 solid;
+    border-bottom: 0px;
+    background-color: #8acb08;
+    padding: 4px 4px;
+    font-weight: bold;
+    width: 150px;
+    text-align: center;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+#vypis_produktu .options {
+    width: 100%;
+    text-align: left;
+    border: 1px #000 solid;
+    padding: 7px 7px;
+    color: #000000;
+    position: relative;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topright: 5px;
+    border-top-right-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    -moz-border-radius-bottomright: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+#vypis_produktu .optinons a:link {
+    text-decoration: none;
+    color: #818b93;
+    font-weight: bold;
+}
+
+#vypis_produktu .optinons a:visited {
+    text-decoration: none;
+    color: #818b93;
+    font-weight: bold;
+}
+
+#vypis_produktu .optinons a:active {
+    text-decoration: none;
+    color: #818b93;
+    font-weight: bold;
+}
+
+#vypis_produktu .optinons a:hover {
+    text-decoration: none;
+    color: #00528a;
+    font-weight: bold;
+}
+
+#polozky_najite .produkt .nazev {
+    padding-top: 20px;
+    font-weight: bold;
+}
+
+#polozky_najite .produkt .miniatura {
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    position: relative;
+    margin: 15px auto;
+    padding: 4px 4px;
+    background-color: #ffffff;
+    width: 80%;
+    font-weight: bold;
+    color: #000000;
+    clear: both;
+    top: 10px;
+}
+
+#polozky_najite .produkt .miniatura img {
+    width: 100%;
+}
+
+#polozky_najite .produkt .popis {
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#polozky_najite .produkt .popis, #polozky_najite .produkt .popis p {
+    text-align: justify;
+}
+
